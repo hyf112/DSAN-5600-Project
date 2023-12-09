@@ -1,0 +1,179 @@
+---
+title: "Data Sources"
+format:
+  html:
+    page-layout: full
+    code-fold: show
+    code-copy: true
+    code-tools: true
+    code-overflow: wrap
+---
+
+In order to collect time-series data on terrorism, choosing The Global Terrorism Database™ (GTD) by University of Maryland was a pragmatic decision because it contains detailed information of global attacks that occurred daily. This gave  enormous flexibility to search for short-term seasonal patterns, if any, regarding terrorist attacks. For assessing the impact of terrorism on economic activity, the SIPRI Military Expenditure Database was employed. Military expenditure as a share of GDP can provide key insights about a country's allocation of resources. Nonimmigrant Admissions data was also collected from the Department of Homeland Security (DHS) to add an extra dimension of how the sentiment of the US government changed regarding tourist admits in the overall analysis.
+
+The Quantmod R package seamlessly allows R users to get stock data, which aids in exploring both changes in prices due to certain terror attacks and how weapons manufacturing companies reacted to these attacks. To analyze domestic financial impacts from terror attacks at a granular level, daily historical stock prices of some of the largest weapons manufacturers in the United States, including Lockheed Martin and Raytheon Technologies, were obtained. Not only stock prices of individual companies, but also data of the Dow Jones U.S. Travel & Tourism Index was gathered to approach the financial analysis at a larger scale.
+
+## The Global Terrorism Database™ (GTD) by University of Maryland
+
+An [open-source database](https://www.start.umd.edu/gtd/contact/download) containing information on terrorist events around the world from 1970 through 2020 (with annual updates planned for the future). Unlike many other event databases, the GTD includes systematic data on domestic as well as international terrorist incidents that have occurred during this time period and now includes more than 200,000 cases.
+
+[![Click on the logo to access the data!](gtd.jpeg)](../Data/gtd.xlsx)
+
+## SIPRI Military Expenditure Database
+
+The [SIPRI Military Expenditure Database](https://milex.sipri.org/sipri) contains consistent time series on the military spending of countries for the period 1949--2021. The database is updated annually, which may include updates to data for any of the years included in the database. The main purpose of the data on military expenditure is to provide an easily identifiable measure of the scale of resources absorbed by the military. Military expenditure is an input measure which is not directly related to the 'output' of military activities, such as military capability or military security. Military expenditure data measured in constant dollars is a trend indicator of the volume of resources used for military activities, which allow comparisons to be made over time for individual countries and between countries.
+
+[![Click on the logo to access the data!](sipri.jpeg){height="180"}](../Data/SIPRI.xlsx)
+
+## Department of Homeland Security (DHS)
+
+The [United States Department of Homeland Security (DHS)](https://www.dhs.gov/immigration-statistics/nonimmigrant) is the U.S. federal executive department responsible for public security, roughly comparable to the interior or home ministries of other countries. Its stated missions involve anti-terrorism, border security, immigration and customs, cyber security, and disaster prevention and management. Collected data comprises of the following US Visa holders from the years 1998 to 2021:
+
+1. Temporary Business Visitors (B-1, WB, CNMI, GMB)
+
+2. Temporary Visitors for Pleasure - Tourism/Vacation or Medical Treatment (B-2, WT, CNMI, GMT)
+
+3. Students (F-1, F-2, M-1, M-2) 
+
+[![Click on the logo to access the data!](dhs.jpeg)](../Data/DHS_98_21.xls)
+
+## Quantmod R Package
+
+The quantmod package for R is designed to assist the quantitative trader in the development, testing, and deployment of statistically based trading models. The getSymbols() function in the package aids in collecting stock price data of US companies and indexes. As previously mentioned, the historical stock prices of Lockheed Martin and the Dow Jones U.S. Travel & Tourism Index were chosen for this analysis.
+
+See data collection code and time-series plots below:
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
+library(flipbookr)
+library(tidyverse)
+library(ggplot2)
+library(forecast)
+library(astsa) 
+library(xts)
+library(tseries)
+library(fpp2)
+library(fma)
+library(lubridate)
+library(tidyverse)
+library(TSstudio)
+library(quantmod)
+library(tidyquant)
+library(plotly)
+library(ggplot2)
+library(fontawesome)
+```
+
+```{r, message=FALSE, warning=FALSE}
+options("getSymbols.warning4.0"=FALSE)
+options("getSymbols.yahoo.warning"=FALSE)
+
+# Collecting Lockheed Martin's Stock Price since IPO
+
+tickers = c("LMT")
+for (i in tickers){
+  getSymbols(i,
+             from = "1995-03-17",
+             to = "2023-01-30")}
+
+lmt <- data.frame(LMT$LMT.Adjusted)
+
+lmt <- data.frame(lmt,rownames(lmt))
+colnames(lmt) <- append(tickers,'Dates')
+
+lmt$date<-as.Date(lmt$Dates,"%Y-%m-%d")
+
+# Collecting Raytheon Tech Corp Stock Price since IPO
+
+tickers = c("RTX")
+for (i in tickers){
+  getSymbols(i,
+             from = "1983-03-04",
+             to = "2023-01-30")}
+
+rtx <- data.frame(RTX$RTX.Adjusted)
+
+rtx <- data.frame(rtx,rownames(rtx))
+colnames(rtx) <- append(tickers,'Dates')
+
+rtx$date<-as.Date(rtx$Dates,"%Y-%m-%d")
+
+# Collecting DJUSTT since formation
+
+tickers = c("^DJUSTT")
+for (i in tickers){
+  getSymbols(i,
+             from = "2008-12-01",
+             to = "2023-01-30")}
+
+dow <- data.frame(DJUSTT$DJUSTT.Adjusted)
+
+dow <- data.frame(dow,rownames(dow))
+colnames(dow) <- append(tickers,'Dates')
+colnames(dow)[1] ="DJUSTT"
+
+dow$date<-as.Date(dow$Dates,"%Y-%m-%d")
+```
+
+### Visualizing Lockheed Martin's and Raytheon Tech's Stock Prices and Dow Jones U.S. Travel & Tourism Index
+
+::: panel-tabset
+#### Lockheed Martin
+
+```{r, message=FALSE, warning=FALSE}
+g1 <- ggplot(lmt, aes(x=date, y=LMT)) +
+  geom_line(color="#005BAD") +
+   labs(
+    title = "Stock Prices for Lockheed Martin",
+    subtitle = "From Dec 2008 - January 2023",
+    x = "Date",
+    y = "Adjusted Closing Prices ($)") + 
+  theme_minimal() 
+
+ggplotly(g1) %>%
+  layout(hovermode = "x")
+```
+
+#### Raytheon Technologies (formerly American Appliance Company)
+
+```{r, message=FALSE, warning=FALSE}
+g2 <- ggplot(rtx, aes(x=date, y=RTX)) +
+  geom_line(color="#E61231") +
+   labs(
+    title = "Stock Prices for Raytheon Technologies",
+    subtitle = "From Mar 1983 - January 2023",
+    x = "Date",
+    y = "Adjusted Closing Prices ($)") + 
+  theme_minimal() 
+
+ggplotly(g2) %>%
+  layout(hovermode = "x")
+```
+
+#### Dow Jones U.S. Travel & Tourism Index
+
+```{r, message=FALSE, warning=FALSE}
+g3 <- ggplot(dow, aes(x=date, y=DJUSTT)) +
+  geom_line() +
+   labs(
+    title = "Dow Jones U.S. Travel & Tourism Index",
+    subtitle = "From March 2020 - December 2022",
+    x = "Date",
+    y = "Adjusted Closing Prices ($)") + 
+     theme_minimal() 
+
+ggplotly(g3) %>%
+  layout(hovermode = "x")
+```
+:::
+
+## Section Code
+
+**Code for this section can be found [here](https://github.com/TegveerG/Time-Series-Project/blob/main/Time%20Series%20Analysis/Data-Sources.qmd)**
+
+## References
+
+“Download the Global Terrorism Database.” Global Terrorism Database, 2001. https://www.start.umd.edu/gtd/contact/download. 
+
+“SIPRI Military Expenditure Database.” SIPRI MILEX. STOCKHOLM INTERNATIONAL PEACE RESEARCH INSTITUTE, 1966. https://milex.sipri.org/sipri. 
+
+“Nonimmigrant Admissions.” Nonimmigrant Admissions | Homeland Security. Department of Homeland Security, n.d. https://www.dhs.gov/immigration-statistics/nonimmigrant. 

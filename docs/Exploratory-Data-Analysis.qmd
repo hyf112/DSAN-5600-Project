@@ -1,0 +1,253 @@
+---
+title: "Exploratory Data Analysis"
+format:
+  html:
+    page-layout: full
+    code-fold: show
+    code-copy: true
+    code-tools: true
+    code-overflow: wrap
+---
+
+## Summary
+
+In this section, I employ various time series analysis tools available in *R* to conduct a preliminary investigation into the daily counts of new COVID-19 cases and deaths in the United States. My exploration encompasses the decomposition of time series to discern underlying components, the creation of Autocorrelation Function (ACF) and Partial Autocorrelation Function (PACF) plots to examine correlations over time, and the application of the Augmented Dickey-Fuller Test to evaluate the stationarity of the data. Concurrently, I utilize moving average smoothing techniques with varying window spans to elucidate the long-term trends embedded within the data. This multi-faceted approach enables a comprehensive temporal analysis, revealing patterns and dynamics crucial for understanding the progression of the COVID-19.
+
+## Daily New Confirmed Cases in the US
+
+### Identifying Time Series Components 
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+library(readxl)
+library(plotly)
+library(dplyr)
+library(zoo)
+library(ggplot2)
+library(forecast)
+library(tseries)
+```
+
+```{r load, include=FALSE, message=FALSE, warning=FALSE}
+owid_covid_data_us <- readxl::read_xlsx("../data/owid_covid_data_us.xlsx")
+```
+
+```{r prepare_for_plot,include=FALSE, message=FALSE, warning=FALSE}
+# Convert the 'date' column as date
+owid_covid_data_us$date <- as.Date(owid_covid_data_us$date)
+
+# Convert to time series object
+new_cases_ts <- ts(owid_covid_data_us$new_cases, frequency=365)
+new_deaths_ts <- ts(owid_covid_data_us$new_deaths, frequency=365)
+
+# Handle NAs with interpolation 
+new_deaths_ts <- na.interp(new_deaths_ts)
+```
+
+```{r plot1, message=FALSE, warning=FALSE}
+plot_new_cases <- plot_ly(data = owid_covid_data_us, x = ~date, y = ~new_cases, type = 'scatter', mode = 'lines', name = 'New Cases', line = list(color = 'red')) %>%
+                    layout(title = "Daily new confirmed COVID-19 Cases in the US", xaxis = list(title = "Date"), yaxis = list(title = "New Cases"))
+
+plot_new_cases
+```
+
+The diagram reveals several key components in the COVID-19 case trends:
+
+- Trend: Initially, from early 2020 to early 2021, there was a general upward trend in daily new cases, peaking in January 2021. This was followed by a decline, then a resurgence in July 2021, leading to a second peak in September 2021. A notable surge occurred in November 2021, culminating in the highest peak in January 2022, significantly surpassing previous peaks. Another peak was observed in July 2022.
+- Seasonality: The data might suggest seasonal patterns, with new case peaks in each winter and summer. However, the impact of various factors, including public health measures and behavioral changes, may obscure a clear seasonal trend in COVID-19 cases.
+- Variability: The data shows erratic changes, with substantial fluctuations in case numbers over time. This variability could stem from different statistical methods, the dynamics of disease transmission, response strategies, and the introduction of vaccines and treatments.
+- Cyclical: The data presents cyclical peaks that could align with different pandemic waves. While these patterns are not strong enough to be labeled as seasonal, they do suggest a recurring trend of rising and falling case numbers.
+
+In summary, the time series graph of daily new confirmed COVID-19 cases in the United States indicates multiple waves, with the most significant surge around early 2022. It's evident that new case numbers are not static but fluctuate, alternating between quieter periods and abrupt increases. The graph also shows that as time progresses, the peaks and troughs become more distinct, and the variance seems to grow alongside the series levels, hinting at a multiplicative relationship between these elements.
+
+### Lag Plots
+
+```{r plot2, message=FALSE, warning=FALSE}
+lag_plot_new_cases <- gglagplot(new_cases_ts, do.lines=FALSE) +
+  ggtitle("Lag Plots for Daily New COVID-19 Cases in the US") +
+  xlab("Lags") + ylab("New Cases") +
+  theme(axis.text.x = element_text(angle=45, hjust=1))
+
+lag_plot_new_cases
+```
+
+The lag plots demonstrate a positive correlation between new COVID-19 cases on a given day and those in subsequent days, up to a certain lag period. This pattern illustrates positive autocorrelation within the dataset, with the correlation strength diminishing as the lag interval increases. For instance, the lag 1 exhibits a robust positive correlation, whereas by lag 16, the dispersion of points suggests a weaker correlation.
+In the early stages of the lag series, some plots reveal potential cyclical patterns, hinting at periodicity within the data. Notably, at higher values, certain points significantly deviate from the main cluster, potentially representing days with abnormally high case counts. These outliers could be due to delayed reporting or aggregated data reporting spanning multiple days.
+The shape of the clusters in the lag plots suggests that the relationship between consecutive days' case counts is not purely linear. This observation implies that predicting future case numbers may require a more sophisticated approach than a basic linear model.
+Collectively, these lag plots signal that historical data holds predictive value for future COVID-19 case numbers. Understanding the autocorrelation and potential periodicity in the data is crucial for effectively modeling the disease's spread. This insight can significantly enhance public health forecasting and strategic planning.
+
+### Decomposing
+
+```{r plot3, message=FALSE, warning=FALSE}
+decomp_new_cases <- decompose(new_cases_ts, type = 'multiplicative')
+
+autoplot(decomp_new_cases) + ggtitle("Multiplicative Decomposition of Daily New COVID-19 Cases")
+```
+
+### ACF and PACF Plots
+
+```{r plot4, message=FALSE, warning=FALSE}
+# Plot ACF
+ggAcf(new_cases_ts, main="ACF for Daily New COVID-19 Cases")
+
+# Plot PACF
+ggPacf(new_cases_ts, main="PACF for Daily New COVID-19 Cases")
+```
+
+The ACF and PACF plots for daily new COVID-19 cases can provide insight into the time series data's autocorrelation and stationarity:
+
+- The ACF plot shows a gradual decline in the autocorrelation as the lags increase, with several lags beyond the first being significant (i.e., the bars are above the blue dashed confidence interval lines). This slow decrease in autocorrelation suggests that there is a strong persistence in the data, meaning past values have a long-term influence on future values. It also suggests some seasonality might be present. This could be related to weekly patterns, monthly reporting cycles, or other seasonal 
+- The PACF plot shows a significant spike at the first lag, which then crosses the confidence interval before gradually tapering off. This indicates that an AR(1) model might capture some of the autocorrelation in the series, but there may be additional complexity given the further significant lags.
+
+In summary, the presence of significant autocorrelation at various lags in both the ACF and PACF suggests that the series is likely non-stationary and could benefit from differencing to remove trends or seasonal effects.
+
+### ADF Test
+
+```{r, test1, message=FALSE, warning=FALSE}
+adf.test(new_cases_ts)
+```
+
+
+The result of the Augmented Dickey-Fuller (ADF) test indicates a test statistic of -5.9797 with a p-value of 0.01. Since the p-value is less than the common significance level of 0.05, I can reject the null hypothesis that the time series has a unit root (i.e., is non-stationary). This result suggests that the time series is stationary. However, this conclusion appears to be in contrast with the earlier analysis based on the ACF and PACF plots, which suggested non-stationarity due to the slow decay in the ACF and significant lags in the PACF.
+
+## Daily New Confirmed Deaths in the US
+
+### Identifying Time Series Components
+
+```{r plot5, message=FALSE, warning=FALSE}
+plot_new_deaths <- plot_ly(data = owid_covid_data_us, x = ~date, y = ~new_deaths, type = 'scatter', mode = 'lines', name = 'New Deaths', line = list(color = 'green')) %>%
+                    layout(title = "Daily new confirmed COVID-19 Deaths in the US", xaxis = list(title = "Date"), yaxis = list(title = "New Deaths"))
+
+plot_new_deaths
+```
+
+The graph provides a detailed insight into the trends of COVID-19 related deaths, highlighting several critical aspects:
+
+- Trend: The graph illustrates multiple peaks that align with different pandemic waves. During these peaks, there's a noticeable escalation in death trends, followed by a decline as the situation comes under control. The trend is dynamic, not uniformly increasing or decreasing, but showing significant spikes during the peak periods of the pandemic.
+- Seasonality: The graph hints at potential seasonality, evident through periodic peaks possibly coinciding with certain times of the year. However, attributing these spikes solely to seasonality may be oversimplified, as they could also result from factors like the emergence of new virus variants, changes in social behavior, or public health policies.
+- Variability: The intensity of these peaks varies, with some waves exhibiting higher death tolls than others. This variation likely reflects the distinct impacts of different pandemic waves.
+- Cyclical: The data's cyclical pattern seems to mirror the fluctuations in daily new COVID-19 cases. These cycles occur irregularly, which aligns with the unpredictable nature of disease transmission and the impact of various intervention measures.
+
+In summary, the mortality trend due to COVID-19 in the United States has seen significant fluctuations over time. Periods of stability are punctuated by sudden surges in deaths, with notable increases observed in late 2020, early 2021, and again around early 2022. The data suggests that the relationship between trend and seasonality might be multiplicative. This implies that as the death toll rises, the variability in data also increases, aligning more closely with the characteristics of a multiplicative model than a simple linear one.
+
+### Lag Plots
+
+```{r plot6, message=FALSE, warning=FALSE}
+lag_plot_new_deaths <- gglagplot(new_deaths_ts, do.lines=FALSE) +
+  ggtitle("Lag Plots for Daily New COVID-19 Deaths in the US") +
+  xlab("Lags") + ylab("New Deaths") +
+  theme(axis.text.x = element_text(angle=45, hjust=1))
+
+lag_plot_new_deaths
+```
+
+The plots for lower lags (e.g., lag 1 to lag 4) show a strong positive correlation, as indicated by the clustering of points along a line rising from the bottom left to the top right. This suggests that the number of deaths on one day is a good predictor of the number of deaths on the following days up to a certain point. As the lag increases, the points spread out more, indicating a decrease in the strength of the correlation. By lag 16, the points are much more dispersed, showing a much weaker predictive relationship. 
+Across various lags, there are some points that stand out from the main cluster, especially at higher death counts. These may represent anomalous days with unusually high death numbers, which could be due to inconsistent reporting or batch reporting of data. The plots, particularly for the initial lags, suggest the possibility of periodicity or cycles in the data, which could correspond to the waves of the pandemic.
+The clusters' shapes indicate that the relationship is not strictly linear, especially for higher lags. This non-linearity suggests that simple linear prediction models might not be adequate for forecasting future deaths based on past data.
+In conclusion, these lag plots demonstrate that past values can be indicative of future trends in COVID-19 death numbers, with a decreasing strength of prediction as time lag increases. The presence of outliers and potential non-linear patterns suggests that complex models may be required for accurate forecasting.
+
+### Decomposing
+
+```{r plot7, message=FALSE, warning=FALSE}
+decomp_new_deaths <- decompose(new_deaths_ts, type = 'multiplicative')
+
+autoplot(decomp_new_deaths) + ggtitle("Multiplicative Decomposition of Daily New COVID-19 Deaths")
+```
+
+### ACF and PACF Plots
+
+```{r plot8, message=FALSE, warning=FALSE}
+# Plot ACF
+ggAcf(new_deaths_ts, main="ACF for Daily New COVID-19 Deaths")
+
+# Plot PACF
+ggPacf(new_deaths_ts, main="PACF for Daily New COVID-19 Deaths")
+```
+
+The ACF and PACF plots for daily new COVID-19 deaths can provide insight into the time series data's autocorrelation and stationarity:
+
+- The ACF plot shows a gradual decline in autocorrelation as the lags increase, but remains positive and above the significance bounds for many lags. The slow decay of the autocorrelation suggests that there is a long memory in the series, with past values influencing future values for an extended period. The autocorrelation at lag 1 is quite high, indicating a strong relationship between consecutive observations.
+- The PACF plot exhibits a sharp cut-off after the first lag, where the autocorrelation is significant, followed by a few more significant spikes at higher lags but with much smaller magnitudes. The significant spike at lag 1 in the PACF plot indicates that the series can be well explained by its own past values up to one lag prior.
+
+Overall, the long memory indicated by the ACF plot and the significant autocorrelation at lag 1 in the PACF plot suggest that the series has persistent patterns over time. The fact that the ACF plot shows a slow decay and does not cut off quickly suggests that the series is not stationary. A stationary time series would typically exhibit a quick drop-off in the ACF plot. The PACF plot would typically show a geometric or exponential decay for a stationary series, but here we see a significant spike at lag 1 and then a few other significant lags, which again suggests non-stationarity.
+
+### ADF Test
+
+```{r, test2, message=FALSE, warning=FALSE}
+adf.test(new_deaths_ts)
+```
+
+Given that the p-value is much higher than 0.05, I fail to reject the null hypothesis. This implies that there is not enough statistical evidence to conclude that the time series is stationary. Therefore, the ADF test result suggests that the time series of new COVID-19 deaths is non-stationary. This result is consistent with the observations from the ACF and PACF plots.
+
+## Moving Average Smoothing
+
+### Moving Average Smoothing of Daily New Confirmed COVID-19 Cases in the US
+
+```{r calculate_ma_new_cases, include=FALSE, message=FALSE, warning=FALSE}
+# Calculate moving averages with different window sizes
+ma_small <- rollmean(new_cases_ts, k = 7, fill = NA, align = 'center')
+ma_medium <- rollmean(new_cases_ts, k = 30, fill = NA, align = 'center')
+ma_large <- rollmean(new_cases_ts, k = 90, fill = NA, align = 'center')
+
+# Convert to data frames for plotting with Plotly
+original_data <- data.frame(Date = index(new_cases_ts), Cases = coredata(new_cases_ts))
+ma_small_data <- data.frame(Date = index(ma_small), MA_Small = ma_small)
+ma_medium_data <- data.frame(Date = index(ma_medium), MA_Medium = ma_medium)
+ma_large_data <- data.frame(Date = index(ma_large), MA_Large = ma_large)
+
+# Create Date index
+date_index <- seq(as.Date("2020-01-04"), as.Date("2023-05-20"), by = "day")
+```
+
+```{r plot9, message=FALSE, warning=FALSE}
+p1 <- plot_ly() %>%
+  add_lines(x = date_index, y = new_cases_ts, name = 'Original', line = list(color = 'blue')) %>%
+  add_lines(x = date_index, y = ma_small, name = 'MA 7 days', line = list(color = 'red')) %>%
+  add_lines(x = date_index, y = ma_medium, name = 'MA 30 days', line = list(color = 'green')) %>%
+  add_lines(x = date_index, y = ma_large, name = 'MA 90 days', line = list(color = 'purple')) %>%
+  layout(
+    title = "Moving Average Smoothing of Daily New Confirmed COVID-19 Cases in the US",
+    xaxis = list(title = "Date"),
+    yaxis = list(title = "New Cases")
+  )
+
+p1
+```
+
+### Moving Average Smoothing of Daily New Confirmed COVID-19 Deaths in the US
+
+```{r calculate_ma_new_deaths, include=FALSE, message=FALSE, warning=FALSE}
+# Calculate moving averages with different window sizes
+ma_small <- rollmean(new_deaths_ts, k = 7, fill = NA, align = 'center')
+ma_medium <- rollmean(new_deaths_ts, k = 30, fill = NA, align = 'center')
+ma_large <- rollmean(new_deaths_ts, k = 90, fill = NA, align = 'center')
+
+# Convert to data frames for plotting with Plotly
+original_data <- data.frame(Date = index(new_deaths_ts), Cases = coredata(new_deaths_ts))
+ma_small_data <- data.frame(Date = index(ma_small), MA_Small = ma_small)
+ma_medium_data <- data.frame(Date = index(ma_medium), MA_Medium = ma_medium)
+ma_large_data <- data.frame(Date = index(ma_large), MA_Large = ma_large)
+
+# Create Date index
+date_index <- seq(as.Date("2020-01-04"), as.Date("2023-05-20"), by = "day")
+```
+
+```{r plot10, message=FALSE, warning=FALSE}
+p2 <- plot_ly() %>%
+  add_lines(x = date_index, y = new_deaths_ts, name = 'Original', line = list(color = 'blue')) %>%
+  add_lines(x = date_index, y = ma_small, name = 'MA 7 days', line = list(color = 'red')) %>%
+  add_lines(x = date_index, y = ma_medium, name = 'MA 30 days', line = list(color = 'green')) %>%
+  add_lines(x = date_index, y = ma_large, name = 'MA 90 days', line = list(color = 'purple')) %>%
+  layout(
+    title = "Moving Average Smoothing of Daily New Confirmed COVID-19 Deaths in the US",
+    xaxis = list(title = "Date"),
+    yaxis = list(title = "New Deaths")
+  )
+
+p2
+```
+
+The plots display the original daily new confirmed COVID-19 cases/deaths in the US along with their moving averages using three different window sizes: 7 days, 30 days, and 90 days.
+
+- MA 7 days (Red line): This moving average closely follows the original data (Blue bars), smoothing out some of the day-to-day variability but still reflecting weekly fluctuations. It allows us to observe short-term trends while reducing 'noise'.
+- MA 30 days (Green line): The 30-day moving average smooths out the data more than the 7-day MA, dampening the impact of short-term fluctuations and highlighting broader trends. It provides a clearer view of the overall direction of the trends over a monthly period. This moving average is less reactive to short-term spikes and drops, which can be particularly useful for understanding the general behavior of the data over a longer time frame.
+- MA 90 days (Purple line): The 90-day moving average provides the smoothest curve, significantly reducing the impact of short-term spikes and showing long-term trends. It is the least reactive to daily changes and most effectively displays the overall trend direction over several months.

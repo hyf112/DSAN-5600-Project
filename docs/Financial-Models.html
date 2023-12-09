@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>DSAN-5600 Project - Yifan Hu - Financial Time Series Models</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Financial-Models.html">Financial Time Series Models</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">DSAN-5600 Project - Yifan Hu</a> 
+        <div class="sidebar-tools-main">
+    <div class="dropdown">
+      <a href="" title="" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label=""><i class="bi bi-github"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://github.com/hyf112/DSAN-5600-Project.git">
+            Source Code
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Data-Sources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Sources</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Data-Visualization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Visualization</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Exploratory-Data-Analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exploratory Data Analysis</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ARMA-ARIMA-SARIMA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ARMA/ARIMA/SARIMA Models</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ARIMAX-SARIMAX-VAR.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ARIMAX/SARIMAX/VAR Models</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Financial-Models.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Financial Time Series Models</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Deep-Learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Deep Learning for TS</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conclusion</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#summary" id="toc-summary" class="nav-link active" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#literature-review" id="toc-literature-review" class="nav-link" data-scroll-target="#literature-review">Literature Review</a></li>
+  <li><a href="#arimagarch-modeling-of-daily-new-confirmed-cases-in-the-us" id="toc-arimagarch-modeling-of-daily-new-confirmed-cases-in-the-us" class="nav-link" data-scroll-target="#arimagarch-modeling-of-daily-new-confirmed-cases-in-the-us">ARIMA+GARCH Modeling of Daily New Confirmed Cases in the US</a>
+  <ul class="collapse">
+  <li><a href="#fitting-arima" id="toc-fitting-arima" class="nav-link" data-scroll-target="#fitting-arima">Fitting ARIMA</a></li>
+  <li><a href="#determining-need-for-additional-model" id="toc-determining-need-for-additional-model" class="nav-link" data-scroll-target="#determining-need-for-additional-model">Determining Need for Additional Model</a></li>
+  <li><a href="#fitting-garchpq-to-residuals" id="toc-fitting-garchpq-to-residuals" class="nav-link" data-scroll-target="#fitting-garchpq-to-residuals">Fitting Garch(p,q) to residuals</a></li>
+  </ul></li>
+  <li><a href="#arimagarch-modeling-of-daily-new-confirmed-deaths-in-the-us" id="toc-arimagarch-modeling-of-daily-new-confirmed-deaths-in-the-us" class="nav-link" data-scroll-target="#arimagarch-modeling-of-daily-new-confirmed-deaths-in-the-us">ARIMA+GARCH Modeling of Daily New Confirmed Deaths in the US</a>
+  <ul class="collapse">
+  <li><a href="#fitting-arima-1" id="toc-fitting-arima-1" class="nav-link" data-scroll-target="#fitting-arima-1">Fitting ARIMA</a></li>
+  <li><a href="#determining-need-for-additional-model-1" id="toc-determining-need-for-additional-model-1" class="nav-link" data-scroll-target="#determining-need-for-additional-model-1">Determining Need for Additional Model</a></li>
+  <li><a href="#fitting-garchpq-to-residuals-1" id="toc-fitting-garchpq-to-residuals-1" class="nav-link" data-scroll-target="#fitting-garchpq-to-residuals-1">Fitting Garch(p,q) to residuals</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content column-body" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Financial Time Series Models</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>In this section, I add an ARCH/GARCH model to the ARIMA model to further fit and predict the daily number of newly confirmed COVID-19 cases and deaths, and try to capture possible clustering of volatility in the data.</p>
+</section>
+<section id="literature-review" class="level2">
+<h2 class="anchored" data-anchor-id="literature-review">Literature Review</h2>
+<p>ARCH (Autoregressive Conditional Heteroskedasticity) and GARCH (Generalized Autoregressive Conditional Heteroskedasticity) models are commonly used to model financial time series data where there is volatility clustering—periods of swings followed by periods of relative calm. These models are well-suited to series with non-constant variance (heteroskedasticity), which is often observed in financial markets.</p>
+<p>For epidemiological data like daily new COVID-19 cases or deaths, it’s possible that similar patterns of volatility could exist. For example, there might be periods of rapid increases or decreases in case numbers due to external factors like new variants, policy changes, or behavioral shifts. If such patterns are present and result in volatility clustering, then using ARCH or GARCH models could be appropriate. In fact, there are many studies using ARCH/GARCH models to predict COVID-19:</p>
+<p>Ekinci (2021) utilized ARMA-GARCH models to forecast the daily growth rate of new COVID-19 cases in nine heavily affected countries, highlighting the models’ superior performance over traditional ARMA models due to their ability to capture conditional heteroskedasticity and heavy-tailed distributions (Ekinci, 2021).</p>
+<p>In the context of the United Arab Emirates, a study deployed seasonal autoregressive moving average and ARCH models to forecast COVID-19 spread, underscoring the significance of advanced modeling techniques in pandemic management (Kamalov F, Thabtah F., 2021).</p>
+<p>Lastly, a South African study by Mthethwa N et al.&nbsp;(2022) employed Markov-switching GARCH-type models with heavy-tailed distributions, focusing on estimating the minimum daily death toll from COVID-19. This research emphasized the similarity between the volatility clustering in COVID-19 death data and financial returns (Mthethwa N, Chifurira R, Chinhamu K., 2022).</p>
+</section>
+<section id="arimagarch-modeling-of-daily-new-confirmed-cases-in-the-us" class="level2">
+<h2 class="anchored" data-anchor-id="arimagarch-modeling-of-daily-new-confirmed-cases-in-the-us">ARIMA+GARCH Modeling of Daily New Confirmed Cases in the US</h2>
+<section id="fitting-arima" class="level3">
+<h3 class="anchored" data-anchor-id="fitting-arima">Fitting ARIMA</h3>
+<p>According to previous analysis, <code>ARIMA(3,1,4)</code> is the best fit model for Daily New Confirmed Cases in the US.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit chosen ARIMA model</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>fit1 <span class="ot">&lt;-</span> <span class="fu">Arima</span>(new_cases_ts, <span class="at">order=</span><span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">4</span>))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract resids and its square</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>resids1 <span class="ot">&lt;-</span> fit1<span class="sc">$</span>residuals</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>square_resids1 <span class="ot">&lt;-</span> resids1<span class="sc">^</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="determining-need-for-additional-model" class="level3">
+<h3 class="anchored" data-anchor-id="determining-need-for-additional-model">Determining Need for Additional Model</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">ACF Plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">PACF Plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Arch test</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot ACF</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(square_resids1, <span class="dv">48</span>, <span class="at">main=</span><span class="st">"ACF for Squared Residuals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Financial-Models_files/figure-html/plot1-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot PACF</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggPacf</span>(square_resids1, <span class="dv">48</span>, <span class="at">main=</span><span class="st">"PACF for Squared Residuals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Financial-Models_files/figure-html/plot2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ArchTest</span>(resids1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    ARCH LM-test; Null hypothesis: no ARCH effects
+
+data:  resids1
+Chi-squared = 528.8, df = 12, p-value &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>I observe significant spikes in the ACF of squared residuals that are outside the confidence bands, and these spikes taper off as the lags increase, this would suggest volatility clustering and potential ARCH effects. The PACF plot also shows significant spikes at the first few lags, it suggests that a GARCH model is more appropriate than an ARCH model.</p>
+<p>The result of Arch Test indicates that there is very strong evidence of ARCH effects in the time series residuals. This means that the volatility of the time series data is clustering, and the variance of the residuals is not constant over time but rather depends on the past values of the squared residuals. This further proves my conclusion before.</p>
+<p>Given this result, an ARCH or GARCH model may be appropriate to model the time-varying volatility in the data. These models are capable of capturing the observed volatility clustering in time series data, which standard ARIMA models cannot do.</p>
+</section>
+<section id="fitting-garchpq-to-residuals" class="level3">
+<h3 class="anchored" data-anchor-id="fitting-garchpq-to-residuals">Fitting Garch(p,q) to residuals</h3>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">list</span>() <span class="do">## set counter</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>cc <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (p <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) {</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (q <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>) {</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>model[[cc]] <span class="ot">&lt;-</span> <span class="fu">garch</span>(resids1,<span class="at">order=</span><span class="fu">c</span>(q,p),<span class="at">trace=</span>F)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>cc <span class="ot">&lt;-</span> cc <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>} </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="do">## get AIC values for model evaluation</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>GARCH_AIC <span class="ot">&lt;-</span> <span class="fu">sapply</span>(model, AIC) </span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>model[[<span class="fu">which</span>(GARCH_AIC <span class="sc">==</span> <span class="fu">min</span>(GARCH_AIC))]] <span class="do">## model with lowest AIC is the best and output model summary</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+garch(x = resids1, order = c(q, p), trace = F)
+
+Coefficient(s):
+       a0         a1         a2         a3         b1         b2         b3  
+4.189e+08  8.722e-02  1.187e-01  1.039e-01  8.217e-03  1.970e-02  1.747e-02  
+       b4         b5         b6         b7  
+1.644e-02  2.845e-03  3.612e-03  1.489e-06  </code></pre>
+</div>
+</div>
+<p>Although <code>GARCH(3,7)</code> seems to have a smaller AIC, the model is obviously overfitted and leads to numerical instability, which is not the result I want. Therefore, consider a more parsimonious model (fewer parameters) that may perform better.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">garchFit</span>(<span class="sc">~</span><span class="fu">garch</span>(<span class="dv">2</span>,<span class="dv">1</span>), resids1, <span class="at">trace =</span> F)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Title:
+ GARCH Modelling 
+
+Call:
+ garchFit(formula = ~garch(2, 1), data = resids1, trace = F) 
+
+Mean and Variance Equation:
+ data ~ garch(2, 1)
+&lt;environment: 0x7f9a66488e48&gt;
+ [data = resids1]
+
+Conditional Distribution:
+ norm 
+
+Coefficient(s):
+       mu      omega     alpha1     alpha2      beta1  
+  1.08129  837.76265    0.83000    1.00000    0.34548  
+
+Std. Errors:
+ based on Hessian 
+
+Error Analysis:
+        Estimate  Std. Error  t value Pr(&gt;|t|)    
+mu     1.081e+00   5.257e+00    0.206  0.83705    
+omega  8.378e+02   8.986e+04    0.009  0.99256    
+alpha1 8.300e-01   3.069e-01    2.705  0.00684 ** 
+alpha2 1.000e+00   2.532e-01    3.949 7.86e-05 ***
+beta1  3.455e-01   2.719e-02   12.704  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Log Likelihood:
+ -7865.927    normalized:  -10.62963 
+
+Description:
+ Fri Dec  8 21:42:09 2023 by user:  
+
+
+Standardised Residuals Tests:
+                                   Statistic p-Value
+ Jarque-Bera Test   R    Chi^2  3.584037e+05       0
+ Shapiro-Wilk Test  R    W      7.070114e-01       0
+ Ljung-Box Test     R    Q(10)  1.361311e+02       0
+ Ljung-Box Test     R    Q(15)  2.372577e+02       0
+ Ljung-Box Test     R    Q(20)  2.815998e+02       0
+ Ljung-Box Test     R^2  Q(10)  1.044666e-01       1
+ Ljung-Box Test     R^2  Q(15)  2.768365e-01       1
+ Ljung-Box Test     R^2  Q(20)  3.529359e-01       1
+ LM Arch Test       R    TR^2   1.311712e-01       1
+
+Information Criterion Statistics:
+     AIC      BIC      SIC     HQIC 
+21.27278 21.30390 21.27269 21.28478 </code></pre>
+</div>
+</div>
+<p>The <code>GARCH(2,1)</code> model results show a simpler model compared to the previously attempted <code>GARCH(3,7)</code> model.</p>
+<p>The result indicates that: The mu coefficient is again not significant, suggesting that the mean of the residuals is not significantly different from zero. The omega coefficient has a very large standard error, indicating instability or issues with the estimation of this parameter. The alpha1 and alpha2 coefficients are significant, suggesting that past squared residuals are important in predicting current volatility. The beta1 coefficient is also significant, implying that past conditional variances are predictive of current conditional variance.</p>
+<p>The Ljung-Box test for the residuals (R) shows significant autocorrelation, suggesting that the model might not be fully capturing the temporal structure in the data. The Ljung-Box test for the squared residuals (R^2) and the LM Arch Test show no significant autocorrelation, indicating that the GARCH model is successfully modeling volatility clustering.</p>
+<p>Overall, while the <code>GARCH(2,1)</code> model has some issues with the estimation of the omega coefficient, it seems to be a better fit than the more complex models. However, the significant autocorrelation in the residuals suggests that further refinement of the model may be necessary, for example, consider using TGARCH or EGARCH models, but I won’t go into further analysis here.</p>
+<p>The equation for the model:</p>
+<p><span class="math display">\[\begin{equation}
+    \Delta y_t = 1005.1702 + 0.5033 \Delta y_{t-1} - 0.4148 \Delta y_{t-2} + 0.6132 \Delta y_{t-3} - 0.8180 \epsilon_{t-1} + 0.0383 \epsilon_{t-2} - 0.6115 \epsilon_{t-3} + 0.6630 \epsilon_{t-4} + \epsilon_t
+\end{equation}\]</span></p>
+<p><span class="math display">\[\begin{equation}
+    \epsilon_t = \sigma_t z_t
+\end{equation}\]</span></p>
+<p><span class="math display">\[\begin{equation}
+    \sigma_t^2 = 837.76265 + 0.83000 \epsilon_{t-1}^2 + 1.00000 \epsilon_{t-2}^2 + 0.34548 \sigma_{t-1}^2
+\end{equation}\]</span></p>
+</section>
+</section>
+<section id="arimagarch-modeling-of-daily-new-confirmed-deaths-in-the-us" class="level2">
+<h2 class="anchored" data-anchor-id="arimagarch-modeling-of-daily-new-confirmed-deaths-in-the-us">ARIMA+GARCH Modeling of Daily New Confirmed Deaths in the US</h2>
+<section id="fitting-arima-1" class="level3">
+<h3 class="anchored" data-anchor-id="fitting-arima-1">Fitting ARIMA</h3>
+<p>According to previous analysis, <code>ARIMA(5,1,2)</code> is the best fit model for Daily New Confirmed Deaths in the US.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit chosen ARIMA model</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">Arima</span>(new_deaths_ts, <span class="at">order=</span><span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract resids and its square</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>resids2 <span class="ot">&lt;-</span> fit2<span class="sc">$</span>residuals</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>square_resids2 <span class="ot">&lt;-</span> resids2<span class="sc">^</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="determining-need-for-additional-model-1" class="level3">
+<h3 class="anchored" data-anchor-id="determining-need-for-additional-model-1">Determining Need for Additional Model</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">ACF Plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">PACF Plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">Arch test</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot ACF</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(square_resids2, <span class="dv">48</span>, <span class="at">main=</span><span class="st">"ACF for Squared Residuals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Financial-Models_files/figure-html/plot3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot PACF</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggPacf</span>(square_resids2, <span class="dv">48</span>, <span class="at">main=</span><span class="st">"PACF for Squared Residuals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Financial-Models_files/figure-html/plot4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ArchTest</span>(resids2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    ARCH LM-test; Null hypothesis: no ARCH effects
+
+data:  resids2
+Chi-squared = 68.057, df = 12, p-value = 7.385e-10</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Combining the visual evidence from the ACF and PACF plots with the statistical evidence from the ARCH LM test, it is clear that there are ARCH effects present in the residuals.</p>
+</section>
+<section id="fitting-garchpq-to-residuals-1" class="level3">
+<h3 class="anchored" data-anchor-id="fitting-garchpq-to-residuals-1">Fitting Garch(p,q) to residuals</h3>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">list</span>() <span class="do">## set counter</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>cc <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (p <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">1</span>) {</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (q <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">1</span>) {</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>model[[cc]] <span class="ot">&lt;-</span> <span class="fu">garch</span>(resids2,<span class="at">order=</span><span class="fu">c</span>(q,p),<span class="at">trace=</span>F)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>cc <span class="ot">&lt;-</span> cc <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>} </span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="do">## get AIC values for model evaluation</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>GARCH_AIC <span class="ot">&lt;-</span> <span class="fu">sapply</span>(model, AIC) </span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>model[[<span class="fu">which</span>(GARCH_AIC <span class="sc">==</span> <span class="fu">min</span>(GARCH_AIC))]] <span class="do">## model with lowest AIC is the best and output model summary</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+garch(x = resids2, order = c(q, p), trace = F)
+
+Coefficient(s):
+       a0         a1         b1  
+8.485e+04  5.294e-01  4.663e-10  </code></pre>
+</div>
+</div>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">garchFit</span>(<span class="sc">~</span><span class="fu">garch</span>(<span class="dv">1</span>,<span class="dv">1</span>), resids2, <span class="at">trace =</span> F)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Title:
+ GARCH Modelling 
+
+Call:
+ garchFit(formula = ~garch(1, 1), data = resids2, trace = F) 
+
+Mean and Variance Equation:
+ data ~ garch(1, 1)
+&lt;environment: 0x7f9a61c8c2b0&gt;
+ [data = resids2]
+
+Conditional Distribution:
+ norm 
+
+Coefficient(s):
+      mu     omega    alpha1     beta1  
+0.028830  0.094282  1.000000  0.587135  
+
+Std. Errors:
+ based on Hessian 
+
+Error Analysis:
+        Estimate  Std. Error  t value Pr(&gt;|t|)    
+mu      0.028830    0.080063     0.36    0.719    
+omega   0.094282         NaN      NaN      NaN    
+alpha1  1.000000    0.017914    55.82   &lt;2e-16 ***
+beta1   0.587135    0.009125    64.34   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Log Likelihood:
+ -4855.116    normalized:  -6.560968 
+
+Description:
+ Fri Dec  8 21:42:10 2023 by user:  
+
+
+Standardised Residuals Tests:
+                                   Statistic      p-Value
+ Jarque-Bera Test   R    Chi^2  5.895898e+04 0.000000e+00
+ Shapiro-Wilk Test  R    W      7.684892e-01 0.000000e+00
+ Ljung-Box Test     R    Q(10)  4.009290e+01 1.631816e-05
+ Ljung-Box Test     R    Q(15)  6.727345e+01 1.360363e-08
+ Ljung-Box Test     R    Q(20)  8.478714e+01 5.956960e-10
+ Ljung-Box Test     R^2  Q(10)  5.722002e-01 9.999874e-01
+ Ljung-Box Test     R^2  Q(15)  7.869662e-01 1.000000e+00
+ Ljung-Box Test     R^2  Q(20)  9.989590e-01 1.000000e+00
+ LM Arch Test       R    TR^2   7.388805e-01 9.999974e-01
+
+Information Criterion Statistics:
+     AIC      BIC      SIC     HQIC 
+13.13275 13.15765 13.13269 13.14235 </code></pre>
+</div>
+</div>
+<p>The output provided from the <code>GARCH(1,1)</code> modeling procedure includes several important components that give us insights into the fitted model’s performance:</p>
+<p>The mu coefficient is not significant with a p-value of 0.719, implying that the conditional mean is not different from zero. The omega coefficient has a problem as its standard error is not available (NaN). This could be a result of numerical issues during optimization or model misspecification. The alpha1 coefficient is at the boundary of the parameter space, being exactly 1. This could indicate a model at the edge of stationarity or nonstationarity in variance, and this could be a sign of the Integrated GARCH (IGARCH) effect, where shocks have a persistent effect on volatility. The beta1 coefficient is significant and less than one, suggesting that past conditional variances do have an impact on current variance, but the effect is not indefinitely persistent.</p>
+<p>The Ljung-Box tests on the residuals R show significant autocorrelations at various lags, suggesting that the <code>GARCH(1,1)</code> model may not be adequately capturing all the dependencies in the data. The Ljung-Box tests on the squared residuals R^2 and the LM Arch Test do not show significant results (p-value ~ 1), indicating no autocorrelation in the squared residuals. This suggests that the <code>GARCH(1,1)</code> model is capturing the volatility clustering in the data.</p>
+<p>Given the output, while the <code>GARCH(1,1)</code> model captures the volatility clustering (as indicated by the non-significant Ljung-Box tests on squared residuals), the issue with omega needs to be addressed. The significance of alpha1 and beta1 suggests that the model is capturing the dynamics of volatility, but the perfect boundary value of 1 for alpha1 could be problematic, indicating that the model might better be specified as an IGARCH model. Additionally, the significant autocorrelations in the residuals suggest that the mean model might need to be expanded or that there are other forms of temporal dependencies not captured by the current model.</p>
+<p>The equation for the model:</p>
+<p><span class="math display">\[\begin{equation}
+    \Delta y_t = 2.4559 + 0.5145 \Delta y_{t-1} - 0.7522 \Delta y_{t-2} - 0.1719 \Delta y_{t-3} - 0.3084 \Delta y_{t-4} - 0.2779 \Delta y_{t-5} - 1.0594 \epsilon_{t-1} + 0.7524 \epsilon_{t-2} + \epsilon_t
+\end{equation}\]</span></p>
+<p><span class="math display">\[\begin{equation}
+    \epsilon_t = \sigma_t z_t
+\end{equation}\]</span></p>
+<p><span class="math display">\[\begin{equation}
+    \sigma_t^2 = 0.094282 + 1.000000 \epsilon_{t-1}^2 + 0.587135 \sigma_{t-1}^2
+\end{equation}\]</span></p>
+
+
+<!-- -->
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb19" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Financial Time Series Models"</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">    page-layout: full</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: show</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co">    code-copy: true</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co">    code-overflow: wrap</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="fu">## Summary</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>In this section, I add an ARCH/GARCH model to the ARIMA model to further fit and predict the daily number of newly confirmed COVID-19 cases and deaths, and try to capture possible clustering of volatility in the data.</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a><span class="fu">## Literature Review</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>ARCH (Autoregressive Conditional Heteroskedasticity) and GARCH (Generalized Autoregressive Conditional Heteroskedasticity) models are commonly used to model financial time series data where there is volatility clustering—periods of swings followed by periods of relative calm. These models are well-suited to series with non-constant variance (heteroskedasticity), which is often observed in financial markets.</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>For epidemiological data like daily new COVID-19 cases or deaths, it's possible that similar patterns of volatility could exist. For example, there might be periods of rapid increases or decreases in case numbers due to external factors like new variants, policy changes, or behavioral shifts. If such patterns are present and result in volatility clustering, then using ARCH or GARCH models could be appropriate. In fact, there are many studies using ARCH/GARCH models to predict COVID-19:</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>Ekinci (2021) utilized ARMA-GARCH models to forecast the daily growth rate of new COVID-19 cases in nine heavily affected countries, highlighting the models' superior performance over traditional ARMA models due to their ability to capture conditional heteroskedasticity and heavy-tailed distributions (Ekinci, 2021).</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>In the context of the United Arab Emirates, a study deployed seasonal autoregressive moving average and ARCH models to forecast COVID-19 spread, underscoring the significance of advanced modeling techniques in pandemic management (Kamalov F, Thabtah F., 2021).</span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>Lastly, a South African study by Mthethwa N et al. (2022) employed Markov-switching GARCH-type models with heavy-tailed distributions, focusing on estimating the minimum daily death toll from COVID-19. This research emphasized the similarity between the volatility clustering in COVID-19 death data and financial returns (Mthethwa N, Chifurira R, Chinhamu K., 2022).</span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a><span class="fu">## ARIMA+GARCH Modeling of Daily New Confirmed Cases in the US</span></span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a><span class="fu">### Fitting ARIMA</span></span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>According to previous analysis, <span class="in">`ARIMA(3,1,4)`</span> is the best fit model for Daily New Confirmed Cases in the US.</span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a><span class="in">```{r setup, include=FALSE, message=FALSE, warning=FALSE}</span></span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span>
+<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(zoo)</span>
+<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forecast)</span>
+<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tseries)</span>
+<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(astsa)</span>
+<span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fpp2)</span>
+<span id="cb19-44"><a href="#cb19-44" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fGarch)</span>
+<span id="cb19-45"><a href="#cb19-45" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rugarch)</span>
+<span id="cb19-46"><a href="#cb19-46" aria-hidden="true" tabindex="-1"></a><span class="co">#options(repos = c(CRAN = "https://cloud.r-project.org"))</span></span>
+<span id="cb19-47"><a href="#cb19-47" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages("FinTS")</span></span>
+<span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FinTS)</span>
+<span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-50"><a href="#cb19-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a><span class="in">```{r load, include=FALSE, message=FALSE, warning=FALSE}</span></span>
+<span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a>owid_covid_data_us <span class="ot">&lt;-</span> readxl<span class="sc">::</span><span class="fu">read_xlsx</span>(<span class="st">"../data/owid_covid_data_us.xlsx"</span>)</span>
+<span id="cb19-53"><a href="#cb19-53" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-54"><a href="#cb19-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-55"><a href="#cb19-55" aria-hidden="true" tabindex="-1"></a><span class="in">```{r prepare_for_plot,include=FALSE, message=FALSE, warning=FALSE}</span></span>
+<span id="cb19-56"><a href="#cb19-56" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert the 'date' column as date</span></span>
+<span id="cb19-57"><a href="#cb19-57" aria-hidden="true" tabindex="-1"></a>owid_covid_data_us<span class="sc">$</span>date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(owid_covid_data_us<span class="sc">$</span>date)</span>
+<span id="cb19-58"><a href="#cb19-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-59"><a href="#cb19-59" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter data for dates before 2022-10-20</span></span>
+<span id="cb19-60"><a href="#cb19-60" aria-hidden="true" tabindex="-1"></a>owid_covid_data_us <span class="ot">&lt;-</span> owid_covid_data_us <span class="sc">%&gt;%</span> <span class="fu">filter</span>(date <span class="sc">&lt;</span> <span class="fu">as.Date</span>(<span class="st">"2022-10-20"</span>))</span>
+<span id="cb19-61"><a href="#cb19-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-62"><a href="#cb19-62" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to time series object</span></span>
+<span id="cb19-63"><a href="#cb19-63" aria-hidden="true" tabindex="-1"></a>new_cases_ts <span class="ot">&lt;-</span> <span class="fu">ts</span>(owid_covid_data_us<span class="sc">$</span>new_cases, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2020</span>, <span class="dv">1</span>, <span class="dv">3</span>), <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">2022</span>, <span class="dv">10</span>, <span class="dv">20</span>), <span class="at">frequency=</span><span class="dv">365</span>)</span>
+<span id="cb19-64"><a href="#cb19-64" aria-hidden="true" tabindex="-1"></a>new_deaths_ts <span class="ot">&lt;-</span> <span class="fu">ts</span>(owid_covid_data_us<span class="sc">$</span>new_deaths, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2020</span>, <span class="dv">1</span>, <span class="dv">3</span>), <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">2022</span>, <span class="dv">10</span>, <span class="dv">20</span>), <span class="at">frequency=</span><span class="dv">365</span>)</span>
+<span id="cb19-65"><a href="#cb19-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-66"><a href="#cb19-66" aria-hidden="true" tabindex="-1"></a><span class="co"># Handle NAs with interpolation </span></span>
+<span id="cb19-67"><a href="#cb19-67" aria-hidden="true" tabindex="-1"></a>new_deaths_ts <span class="ot">&lt;-</span> <span class="fu">na.interp</span>(new_deaths_ts)</span>
+<span id="cb19-68"><a href="#cb19-68" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-69"><a href="#cb19-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-70"><a href="#cb19-70" aria-hidden="true" tabindex="-1"></a><span class="in">```{r res1, message=FALSE, warning=FALSE}</span></span>
+<span id="cb19-71"><a href="#cb19-71" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit chosen ARIMA model</span></span>
+<span id="cb19-72"><a href="#cb19-72" aria-hidden="true" tabindex="-1"></a>fit1 <span class="ot">&lt;-</span> <span class="fu">Arima</span>(new_cases_ts, <span class="at">order=</span><span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">4</span>))</span>
+<span id="cb19-73"><a href="#cb19-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-74"><a href="#cb19-74" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract resids and its square</span></span>
+<span id="cb19-75"><a href="#cb19-75" aria-hidden="true" tabindex="-1"></a>resids1 <span class="ot">&lt;-</span> fit1<span class="sc">$</span>residuals</span>
+<span id="cb19-76"><a href="#cb19-76" aria-hidden="true" tabindex="-1"></a>square_resids1 <span class="ot">&lt;-</span> resids1<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb19-77"><a href="#cb19-77" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-78"><a href="#cb19-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-79"><a href="#cb19-79" aria-hidden="true" tabindex="-1"></a><span class="fu">### Determining Need for Additional Model</span></span>
+<span id="cb19-80"><a href="#cb19-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-81"><a href="#cb19-81" aria-hidden="true" tabindex="-1"></a>::: panel-tabset</span>
+<span id="cb19-82"><a href="#cb19-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-83"><a href="#cb19-83" aria-hidden="true" tabindex="-1"></a><span class="fu">#### ACF Plot</span></span>
+<span id="cb19-84"><a href="#cb19-84" aria-hidden="true" tabindex="-1"></a><span class="in">```{r plot1, message=FALSE, warning=FALSE}</span></span>
+<span id="cb19-85"><a href="#cb19-85" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot ACF</span></span>
+<span id="cb19-86"><a href="#cb19-86" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(square_resids1, <span class="dv">48</span>, <span class="at">main=</span><span class="st">"ACF for Squared Residuals"</span>)</span>
+<span id="cb19-87"><a href="#cb19-87" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-88"><a href="#cb19-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-89"><a href="#cb19-89" aria-hidden="true" tabindex="-1"></a><span class="fu">#### PACF Plot</span></span>
+<span id="cb19-90"><a href="#cb19-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-91"><a href="#cb19-91" aria-hidden="true" tabindex="-1"></a><span class="in">```{r plot2, message=FALSE, warning=FALSE}</span></span>
+<span id="cb19-92"><a href="#cb19-92" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot PACF</span></span>
+<span id="cb19-93"><a href="#cb19-93" aria-hidden="true" tabindex="-1"></a><span class="fu">ggPacf</span>(square_resids1, <span class="dv">48</span>, <span class="at">main=</span><span class="st">"PACF for Squared Residuals"</span>)</span>
+<span id="cb19-94"><a href="#cb19-94" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-95"><a href="#cb19-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-96"><a href="#cb19-96" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Arch test</span></span>
+<span id="cb19-97"><a href="#cb19-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-98"><a href="#cb19-98" aria-hidden="true" tabindex="-1"></a><span class="in">```{r test1, message=FALSE, warning=FALSE}</span></span>
+<span id="cb19-99"><a href="#cb19-99" aria-hidden="true" tabindex="-1"></a><span class="fu">ArchTest</span>(resids1)</span>
+<span id="cb19-100"><a href="#cb19-100" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-101"><a href="#cb19-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-102"><a href="#cb19-102" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb19-103"><a href="#cb19-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-104"><a href="#cb19-104" aria-hidden="true" tabindex="-1"></a>I observe significant spikes in the ACF of squared residuals that are outside the confidence bands, and these spikes taper off as the lags increase, this would suggest volatility clustering and potential ARCH effects. The PACF plot also shows significant spikes at the first few lags, it suggests that a GARCH model is more appropriate than an ARCH model.</span>
+<span id="cb19-105"><a href="#cb19-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-106"><a href="#cb19-106" aria-hidden="true" tabindex="-1"></a>The result of Arch Test indicates that there is very strong evidence of ARCH effects in the time series residuals. This means that the volatility of the time series data is clustering, and the variance of the residuals is not constant over time but rather depends on the past values of the squared residuals. This further proves my conclusion before.</span>
+<span id="cb19-107"><a href="#cb19-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-108"><a href="#cb19-108" aria-hidden="true" tabindex="-1"></a>Given this result, an ARCH or GARCH model may be appropriate to model the time-varying volatility in the data. These models are capable of capturing the observed volatility clustering in time series data, which standard ARIMA models cannot do.</span>
+<span id="cb19-109"><a href="#cb19-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-110"><a href="#cb19-110" aria-hidden="true" tabindex="-1"></a><span class="fu">### Fitting Garch(p,q) to residuals</span></span>
+<span id="cb19-111"><a href="#cb19-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-112"><a href="#cb19-112" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fit1, message=FALSE, warning=FALSE}</span></span>
+<span id="cb19-113"><a href="#cb19-113" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">list</span>() <span class="do">## set counter</span></span>
+<span id="cb19-114"><a href="#cb19-114" aria-hidden="true" tabindex="-1"></a>cc <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb19-115"><a href="#cb19-115" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (p <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) {</span>
+<span id="cb19-116"><a href="#cb19-116" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (q <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>) {</span>
+<span id="cb19-117"><a href="#cb19-117" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb19-118"><a href="#cb19-118" aria-hidden="true" tabindex="-1"></a>model[[cc]] <span class="ot">&lt;-</span> <span class="fu">garch</span>(resids1,<span class="at">order=</span><span class="fu">c</span>(q,p),<span class="at">trace=</span>F)</span>
+<span id="cb19-119"><a href="#cb19-119" aria-hidden="true" tabindex="-1"></a>cc <span class="ot">&lt;-</span> cc <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb19-120"><a href="#cb19-120" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb19-121"><a href="#cb19-121" aria-hidden="true" tabindex="-1"></a>} </span>
+<span id="cb19-122"><a href="#cb19-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-123"><a href="#cb19-123" aria-hidden="true" tabindex="-1"></a><span class="do">## get AIC values for model evaluation</span></span>
+<span id="cb19-124"><a href="#cb19-124" aria-hidden="true" tabindex="-1"></a>GARCH_AIC <span class="ot">&lt;-</span> <span class="fu">sapply</span>(model, AIC) </span>
+<span id="cb19-125"><a href="#cb19-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-126"><a href="#cb19-126" aria-hidden="true" tabindex="-1"></a>model[[<span class="fu">which</span>(GARCH_AIC <span class="sc">==</span> <span class="fu">min</span>(GARCH_AIC))]] <span class="do">## model with lowest AIC is the best and output model summary</span></span>
+<span id="cb19-127"><a href="#cb19-127" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-128"><a href="#cb19-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-129"><a href="#cb19-129" aria-hidden="true" tabindex="-1"></a>Although <span class="in">`GARCH(3,7)`</span> seems to have a smaller AIC, the model is obviously overfitted and leads to numerical instability, which is not the result I want. Therefore, consider a more parsimonious model (fewer parameters) that may perform better.</span>
+<span id="cb19-130"><a href="#cb19-130" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fit1_result, message=FALSE, warning=FALSE}</span></span>
+<span id="cb19-131"><a href="#cb19-131" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">garchFit</span>(<span class="sc">~</span><span class="fu">garch</span>(<span class="dv">2</span>,<span class="dv">1</span>), resids1, <span class="at">trace =</span> F)) </span>
+<span id="cb19-132"><a href="#cb19-132" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-133"><a href="#cb19-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-134"><a href="#cb19-134" aria-hidden="true" tabindex="-1"></a>The <span class="in">`GARCH(2,1)`</span> model results show a simpler model compared to the previously attempted <span class="in">`GARCH(3,7)`</span> model.</span>
+<span id="cb19-135"><a href="#cb19-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-136"><a href="#cb19-136" aria-hidden="true" tabindex="-1"></a>The result indicates that: The mu coefficient is again not significant, suggesting that the mean of the residuals is not significantly different from zero. The omega coefficient has a very large standard error, indicating instability or issues with the estimation of this parameter. The alpha1 and alpha2 coefficients are significant, suggesting that past squared residuals are important in predicting current volatility. The beta1 coefficient is also significant, implying that past conditional variances are predictive of current conditional variance.</span>
+<span id="cb19-137"><a href="#cb19-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-138"><a href="#cb19-138" aria-hidden="true" tabindex="-1"></a>The Ljung-Box test for the residuals (R) shows significant autocorrelation, suggesting that the model might not be fully capturing the temporal structure in the data. The Ljung-Box test for the squared residuals (R^2) and the LM Arch Test show no significant autocorrelation, indicating that the GARCH model is successfully modeling volatility clustering.</span>
+<span id="cb19-139"><a href="#cb19-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-140"><a href="#cb19-140" aria-hidden="true" tabindex="-1"></a>Overall, while the <span class="in">`GARCH(2,1)`</span> model has some issues with the estimation of the omega coefficient, it seems to be a better fit than the more complex models. However, the significant autocorrelation in the residuals suggests that further refinement of the model may be necessary, for example, consider using TGARCH or EGARCH models, but I won't go into further analysis here.</span>
+<span id="cb19-141"><a href="#cb19-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-142"><a href="#cb19-142" aria-hidden="true" tabindex="-1"></a>The equation for the model:</span>
+<span id="cb19-143"><a href="#cb19-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-144"><a href="#cb19-144" aria-hidden="true" tabindex="-1"></a>\begin{equation}</span>
+<span id="cb19-145"><a href="#cb19-145" aria-hidden="true" tabindex="-1"></a>    \Delta y_t = 1005.1702 + 0.5033 \Delta y_{t-1} - 0.4148 \Delta y_{t-2} + 0.6132 \Delta y_{t-3} - 0.8180 \epsilon_{t-1} + 0.0383 \epsilon_{t-2} - 0.6115 \epsilon_{t-3} + 0.6630 \epsilon_{t-4} + \epsilon_t</span>
+<span id="cb19-146"><a href="#cb19-146" aria-hidden="true" tabindex="-1"></a>\end{equation}</span>
+<span id="cb19-147"><a href="#cb19-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-148"><a href="#cb19-148" aria-hidden="true" tabindex="-1"></a>\begin{equation}</span>
+<span id="cb19-149"><a href="#cb19-149" aria-hidden="true" tabindex="-1"></a>    \epsilon_t = \sigma_t z_t</span>
+<span id="cb19-150"><a href="#cb19-150" aria-hidden="true" tabindex="-1"></a>\end{equation}</span>
+<span id="cb19-151"><a href="#cb19-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-152"><a href="#cb19-152" aria-hidden="true" tabindex="-1"></a>\begin{equation}</span>
+<span id="cb19-153"><a href="#cb19-153" aria-hidden="true" tabindex="-1"></a>    \sigma_t^2 = 837.76265 + 0.83000 \epsilon_{t-1}^2 + 1.00000 \epsilon_{t-2}^2 + 0.34548 \sigma_{t-1}^2</span>
+<span id="cb19-154"><a href="#cb19-154" aria-hidden="true" tabindex="-1"></a>\end{equation}</span>
+<span id="cb19-155"><a href="#cb19-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-156"><a href="#cb19-156" aria-hidden="true" tabindex="-1"></a><span class="fu">## ARIMA+GARCH Modeling of Daily New Confirmed Deaths in the US</span></span>
+<span id="cb19-157"><a href="#cb19-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-158"><a href="#cb19-158" aria-hidden="true" tabindex="-1"></a><span class="fu">### Fitting ARIMA</span></span>
+<span id="cb19-159"><a href="#cb19-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-160"><a href="#cb19-160" aria-hidden="true" tabindex="-1"></a>According to previous analysis, <span class="in">`ARIMA(5,1,2)`</span> is the best fit model for Daily New Confirmed Deaths in the US.</span>
+<span id="cb19-161"><a href="#cb19-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-162"><a href="#cb19-162" aria-hidden="true" tabindex="-1"></a><span class="in">```{r res2, message=FALSE, warning=FALSE}</span></span>
+<span id="cb19-163"><a href="#cb19-163" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit chosen ARIMA model</span></span>
+<span id="cb19-164"><a href="#cb19-164" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">Arima</span>(new_deaths_ts, <span class="at">order=</span><span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb19-165"><a href="#cb19-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-166"><a href="#cb19-166" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract resids and its square</span></span>
+<span id="cb19-167"><a href="#cb19-167" aria-hidden="true" tabindex="-1"></a>resids2 <span class="ot">&lt;-</span> fit2<span class="sc">$</span>residuals</span>
+<span id="cb19-168"><a href="#cb19-168" aria-hidden="true" tabindex="-1"></a>square_resids2 <span class="ot">&lt;-</span> resids2<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb19-169"><a href="#cb19-169" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-170"><a href="#cb19-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-171"><a href="#cb19-171" aria-hidden="true" tabindex="-1"></a><span class="fu">### Determining Need for Additional Model</span></span>
+<span id="cb19-172"><a href="#cb19-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-173"><a href="#cb19-173" aria-hidden="true" tabindex="-1"></a>::: panel-tabset</span>
+<span id="cb19-174"><a href="#cb19-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-175"><a href="#cb19-175" aria-hidden="true" tabindex="-1"></a><span class="fu">#### ACF Plot</span></span>
+<span id="cb19-176"><a href="#cb19-176" aria-hidden="true" tabindex="-1"></a><span class="in">```{r plot3, message=FALSE, warning=FALSE}</span></span>
+<span id="cb19-177"><a href="#cb19-177" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot ACF</span></span>
+<span id="cb19-178"><a href="#cb19-178" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(square_resids2, <span class="dv">48</span>, <span class="at">main=</span><span class="st">"ACF for Squared Residuals"</span>)</span>
+<span id="cb19-179"><a href="#cb19-179" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-180"><a href="#cb19-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-181"><a href="#cb19-181" aria-hidden="true" tabindex="-1"></a><span class="fu">#### PACF Plot</span></span>
+<span id="cb19-182"><a href="#cb19-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-183"><a href="#cb19-183" aria-hidden="true" tabindex="-1"></a><span class="in">```{r plot4, message=FALSE, warning=FALSE}</span></span>
+<span id="cb19-184"><a href="#cb19-184" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot PACF</span></span>
+<span id="cb19-185"><a href="#cb19-185" aria-hidden="true" tabindex="-1"></a><span class="fu">ggPacf</span>(square_resids2, <span class="dv">48</span>, <span class="at">main=</span><span class="st">"PACF for Squared Residuals"</span>)</span>
+<span id="cb19-186"><a href="#cb19-186" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-187"><a href="#cb19-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-188"><a href="#cb19-188" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Arch test</span></span>
+<span id="cb19-189"><a href="#cb19-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-190"><a href="#cb19-190" aria-hidden="true" tabindex="-1"></a><span class="in">```{r test2, message=FALSE, warning=FALSE}</span></span>
+<span id="cb19-191"><a href="#cb19-191" aria-hidden="true" tabindex="-1"></a><span class="fu">ArchTest</span>(resids2)</span>
+<span id="cb19-192"><a href="#cb19-192" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-193"><a href="#cb19-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-194"><a href="#cb19-194" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb19-195"><a href="#cb19-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-196"><a href="#cb19-196" aria-hidden="true" tabindex="-1"></a>Combining the visual evidence from the ACF and PACF plots with the statistical evidence from the ARCH LM test, it is clear that there are ARCH effects present in the residuals.</span>
+<span id="cb19-197"><a href="#cb19-197" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-198"><a href="#cb19-198" aria-hidden="true" tabindex="-1"></a><span class="fu">### Fitting Garch(p,q) to residuals</span></span>
+<span id="cb19-199"><a href="#cb19-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-200"><a href="#cb19-200" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fit2, message=FALSE, warning=FALSE}</span></span>
+<span id="cb19-201"><a href="#cb19-201" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">list</span>() <span class="do">## set counter</span></span>
+<span id="cb19-202"><a href="#cb19-202" aria-hidden="true" tabindex="-1"></a>cc <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb19-203"><a href="#cb19-203" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (p <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">1</span>) {</span>
+<span id="cb19-204"><a href="#cb19-204" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (q <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">1</span>) {</span>
+<span id="cb19-205"><a href="#cb19-205" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb19-206"><a href="#cb19-206" aria-hidden="true" tabindex="-1"></a>model[[cc]] <span class="ot">&lt;-</span> <span class="fu">garch</span>(resids2,<span class="at">order=</span><span class="fu">c</span>(q,p),<span class="at">trace=</span>F)</span>
+<span id="cb19-207"><a href="#cb19-207" aria-hidden="true" tabindex="-1"></a>cc <span class="ot">&lt;-</span> cc <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb19-208"><a href="#cb19-208" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb19-209"><a href="#cb19-209" aria-hidden="true" tabindex="-1"></a>} </span>
+<span id="cb19-210"><a href="#cb19-210" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-211"><a href="#cb19-211" aria-hidden="true" tabindex="-1"></a><span class="do">## get AIC values for model evaluation</span></span>
+<span id="cb19-212"><a href="#cb19-212" aria-hidden="true" tabindex="-1"></a>GARCH_AIC <span class="ot">&lt;-</span> <span class="fu">sapply</span>(model, AIC) </span>
+<span id="cb19-213"><a href="#cb19-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-214"><a href="#cb19-214" aria-hidden="true" tabindex="-1"></a>model[[<span class="fu">which</span>(GARCH_AIC <span class="sc">==</span> <span class="fu">min</span>(GARCH_AIC))]] <span class="do">## model with lowest AIC is the best and output model summary</span></span>
+<span id="cb19-215"><a href="#cb19-215" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-216"><a href="#cb19-216" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-217"><a href="#cb19-217" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fit2_result, message=FALSE, warning=FALSE}</span></span>
+<span id="cb19-218"><a href="#cb19-218" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">garchFit</span>(<span class="sc">~</span><span class="fu">garch</span>(<span class="dv">1</span>,<span class="dv">1</span>), resids2, <span class="at">trace =</span> F)) </span>
+<span id="cb19-219"><a href="#cb19-219" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-220"><a href="#cb19-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-221"><a href="#cb19-221" aria-hidden="true" tabindex="-1"></a>The output provided from the <span class="in">`GARCH(1,1)`</span> modeling procedure includes several important components that give us insights into the fitted model's performance:</span>
+<span id="cb19-222"><a href="#cb19-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-223"><a href="#cb19-223" aria-hidden="true" tabindex="-1"></a>The mu coefficient is not significant with a p-value of 0.719, implying that the conditional mean is not different from zero. The omega coefficient has a problem as its standard error is not available (NaN). This could be a result of numerical issues during optimization or model misspecification. The alpha1 coefficient is at the boundary of the parameter space, being exactly 1. This could indicate a model at the edge of stationarity or nonstationarity in variance, and this could be a sign of the Integrated GARCH (IGARCH) effect, where shocks have a persistent effect on volatility. The beta1 coefficient is significant and less than one, suggesting that past conditional variances do have an impact on current variance, but the effect is not indefinitely persistent.</span>
+<span id="cb19-224"><a href="#cb19-224" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-225"><a href="#cb19-225" aria-hidden="true" tabindex="-1"></a>The Ljung-Box tests on the residuals R show significant autocorrelations at various lags, suggesting that the <span class="in">`GARCH(1,1)`</span> model may not be adequately capturing all the dependencies in the data. The Ljung-Box tests on the squared residuals R^2 and the LM Arch Test do not show significant results (p-value ~ 1), indicating no autocorrelation in the squared residuals. This suggests that the <span class="in">`GARCH(1,1)`</span> model is capturing the volatility clustering in the data.</span>
+<span id="cb19-226"><a href="#cb19-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-227"><a href="#cb19-227" aria-hidden="true" tabindex="-1"></a>Given the output, while the <span class="in">`GARCH(1,1)`</span> model captures the volatility clustering (as indicated by the non-significant Ljung-Box tests on squared residuals), the issue with omega needs to be addressed. The significance of alpha1 and beta1 suggests that the model is capturing the dynamics of volatility, but the perfect boundary value of 1 for alpha1 could be problematic, indicating that the model might better be specified as an IGARCH model. Additionally, the significant autocorrelations in the residuals suggest that the mean model might need to be expanded or that there are other forms of temporal dependencies not captured by the current model.</span>
+<span id="cb19-228"><a href="#cb19-228" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-229"><a href="#cb19-229" aria-hidden="true" tabindex="-1"></a>The equation for the model:</span>
+<span id="cb19-230"><a href="#cb19-230" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-231"><a href="#cb19-231" aria-hidden="true" tabindex="-1"></a>\begin{equation}</span>
+<span id="cb19-232"><a href="#cb19-232" aria-hidden="true" tabindex="-1"></a>    \Delta y_t = 2.4559 + 0.5145 \Delta y_{t-1} - 0.7522 \Delta y_{t-2} - 0.1719 \Delta y_{t-3} - 0.3084 \Delta y_{t-4} - 0.2779 \Delta y_{t-5} - 1.0594 \epsilon_{t-1} + 0.7524 \epsilon_{t-2} + \epsilon_t</span>
+<span id="cb19-233"><a href="#cb19-233" aria-hidden="true" tabindex="-1"></a>\end{equation}</span>
+<span id="cb19-234"><a href="#cb19-234" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-235"><a href="#cb19-235" aria-hidden="true" tabindex="-1"></a>\begin{equation}</span>
+<span id="cb19-236"><a href="#cb19-236" aria-hidden="true" tabindex="-1"></a>    \epsilon_t = \sigma_t z_t</span>
+<span id="cb19-237"><a href="#cb19-237" aria-hidden="true" tabindex="-1"></a>\end{equation}</span>
+<span id="cb19-238"><a href="#cb19-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-239"><a href="#cb19-239" aria-hidden="true" tabindex="-1"></a>\begin{equation}</span>
+<span id="cb19-240"><a href="#cb19-240" aria-hidden="true" tabindex="-1"></a>    \sigma_t^2 = 0.094282 + 1.000000 \epsilon_{t-1}^2 + 0.587135 \sigma_{t-1}^2</span>
+<span id="cb19-241"><a href="#cb19-241" aria-hidden="true" tabindex="-1"></a>\end{equation}</span>
+<span id="cb19-242"><a href="#cb19-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-243"><a href="#cb19-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-244"><a href="#cb19-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-245"><a href="#cb19-245" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+</body></html>

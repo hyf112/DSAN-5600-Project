@@ -1,0 +1,1690 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>DSAN-5600 Project - Yifan Hu - ARIMAX/SARIMAX/VAR Models</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ARIMAX-SARIMAX-VAR.html">ARIMAX/SARIMAX/VAR Models</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">DSAN-5600 Project - Yifan Hu</a> 
+        <div class="sidebar-tools-main">
+    <div class="dropdown">
+      <a href="" title="" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label=""><i class="bi bi-github"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://github.com/hyf112/DSAN-5600-Project.git">
+            Source Code
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Data-Sources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Sources</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Data-Visualization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Visualization</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Exploratory-Data-Analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exploratory Data Analysis</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ARMA-ARIMA-SARIMA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ARMA/ARIMA/SARIMA Models</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ARIMAX-SARIMAX-VAR.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">ARIMAX/SARIMAX/VAR Models</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Financial-Models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Financial Time Series Models</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Deep-Learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Deep Learning for TS</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conclusion</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#summary" id="toc-summary" class="nav-link active" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#literature-review" id="toc-literature-review" class="nav-link" data-scroll-target="#literature-review">Literature review</a></li>
+  <li><a href="#var---daily-new-confirmed-deaths-in-the-us-hospital-patients-and-icu-patients" id="toc-var---daily-new-confirmed-deaths-in-the-us-hospital-patients-and-icu-patients" class="nav-link" data-scroll-target="#var---daily-new-confirmed-deaths-in-the-us-hospital-patients-and-icu-patients">VAR - Daily New Confirmed Deaths in the US, Hospital Patients, and ICU Patients</a>
+  <ul class="collapse">
+  <li><a href="#exploratory-analysis" id="toc-exploratory-analysis" class="nav-link" data-scroll-target="#exploratory-analysis">Exploratory Analysis</a></li>
+  <li><a href="#fitting-varp" id="toc-fitting-varp" class="nav-link" data-scroll-target="#fitting-varp">Fitting VAR(p)</a></li>
+  <li><a href="#cross-validation" id="toc-cross-validation" class="nav-link" data-scroll-target="#cross-validation">Cross Validation</a></li>
+  <li><a href="#forecasting" id="toc-forecasting" class="nav-link" data-scroll-target="#forecasting">Forecasting</a></li>
+  </ul></li>
+  <li><a href="#arimax---daily-new-confirmed-cases-in-the-us-and-people-vaccinated" id="toc-arimax---daily-new-confirmed-cases-in-the-us-and-people-vaccinated" class="nav-link" data-scroll-target="#arimax---daily-new-confirmed-cases-in-the-us-and-people-vaccinated">ARIMAX - Daily New Confirmed Cases in the US, and People Vaccinated</a>
+  <ul class="collapse">
+  <li><a href="#exploratory-analysis-1" id="toc-exploratory-analysis-1" class="nav-link" data-scroll-target="#exploratory-analysis-1">Exploratory Analysis</a></li>
+  <li><a href="#auto.arima" id="toc-auto.arima" class="nav-link" data-scroll-target="#auto.arima">Auto.Arima</a></li>
+  <li><a href="#fitting-arimax-model-manually" id="toc-fitting-arimax-model-manually" class="nav-link" data-scroll-target="#fitting-arimax-model-manually">Fitting ARIMAX Model Manually</a></li>
+  <li><a href="#model-diagnostics" id="toc-model-diagnostics" class="nav-link" data-scroll-target="#model-diagnostics">Model Diagnostics</a></li>
+  <li><a href="#forecasting-1" id="toc-forecasting-1" class="nav-link" data-scroll-target="#forecasting-1">Forecasting</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content column-body" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">ARIMAX/SARIMAX/VAR Models</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>In this section, I will use the VAR model to examine the relationship between the daily number of newly confirmed COVID-19 deaths and the number of ICU patients and the number of hospital patients, and use the ARIMAX model to examine the relationship between the daily number of newly confirmed COVID-19 cases and the number of vaccinated people. relationships and try to create effective predictive models.</p>
+</section>
+<section id="literature-review" class="level2">
+<h2 class="anchored" data-anchor-id="literature-review">Literature review</h2>
+<p>I synthesizes findings from three critical studies that investigate the rate of Intensive Care Unit (ICU) admissions and outcomes among patients with coronavirus, as well as factors associated with ICU mortality in COVID-19 patients:</p>
+<p>Abate, et al (2020) did a systematic review and meta-analysis aimed to understand the rate of Intensive Care Unit (ICU) admissions and outcomes among coronavirus patients. Their study synthesized data from various observational studies to provide a global perspective on the critical care aspects of COVID-19. It emphasized the variability in ICU admission rates and highlighted the significant factors influencing patient outcomes in ICUs, such as healthcare system capabilities, patient demographics, and infection severity (Abate, S. M., Ahmed Ali, S., Mantfardo, B., &amp; Basu, B., 2020).</p>
+<p>Lavrentieva, A., et al (2023) conducted an observational study, with a critical review of the literature to identify factors associated with ICU mortality in COVID-19 patients. Through analyzing patient data, the research identified key predictors of mortality within ICU environments, such as comorbidities, age, and treatment modalities. The study’s findings provide valuable insights for healthcare practitioners in understanding and predicting the risk factors for mortality among critically ill COVID-19 patients (Lavrentieva, A., Kaimakamis, E., Voutsas, V., &amp; Bitzani, M., 2023).</p>
+<p>Kowsar, R., et al (2023), their article presents a meta- and network analysis to assess the risk of mortality in COVID-19 patients. Combining data from various sources, the study offers a comprehensive view of the factors contributing to patient outcomes during the pandemic. It highlights the complexity of managing COVID-19, particularly in critical care settings, and underscores the importance of understanding various factors, including patient demographics and comorbidities, in determining patient outcomes (Kowsar, R., Rahimi, A. M., Sroka, M., Mansouri, A., Sadeghi, K., Bonakdar, E., Kateb, S. F., &amp; Mahdavi, A. H., 2023).</p>
+<p>The ongoing COVID-19 pandemic has prompted extensive research into the impact of vaccination on the spread and severity of the virus. This literature review synthesizes findings from recent studies to understand better the correlation between daily new COVID-19 cases and vaccination:</p>
+<p>A global study emphasized the effectiveness of COVID-19 vaccination in reducing new cases and deaths. This research, analyzing global vaccine data, concluded that while vaccination significantly curtails the spread and fatality rates of COVID-19, the inequitable distribution of vaccines across countries poses a significant challenge (Global Vaccine Data Analysis, PubMed). This study’s findings are crucial in understanding the global dynamics of vaccine impact on COVID-19 cases (Li Z, Liu X, Liu M, Wu Z, Liu Y, Li W, Liu M, Wang X, Gao B, Luo Y, Li X, Tao L, Wang W, Guo X., 2021).</p>
+<p>Focusing on the United States, a study in Nature explored the impact of vaccination across various states. It reported no significant correlation between pre-vaccination growth rates and vaccination rates, suggesting a consistent effectiveness of vaccines across different demographics and geographical areas. This research implies that the effectiveness of COVID-19 vaccines is relatively uniform, regardless of variations in states’ demographic and political characteristics (Chen, X., Huang, H., Ju, J. et al., 2022).</p>
+<p>Another research investigated the correlation between COVID-19 vaccine coverage rates and hospitalization on a global scale. This study found a direct relationship between vaccine coverage and the number of hospital and ICU patients, indicating that higher vaccination rates correlate with lower hospitalization rates (Huang C, Yang L, Pan J, Xu X, Peng R., 2022).</p>
+<p>Mathematical modeling studies have also contributed significantly to this topic. Various studies assessed the effectiveness of vaccines, the impact on COVID-19 case numbers, and the role of vaccination in conjunction with non-pharmaceutical interventions. These models provide a predictive insight into the impact of vaccination strategies and their potential to control the pandemic (Moore, S., Hill, E.M., Dyson, L. et al., 2022).</p>
+<p>Lastly, an analysis by Johns Hopkins University revealed a significant negative correlation between vaccination coverage and the incidence and mortality rates of COVID-19 in U.S. counties. This study highlighted the disparities in vaccination uptake and the impact of COVID-19 across different county demographics, such as political affiliation, land use, and socioeconomic status (Ensheng Dong and Lauren Gardner, 2021).</p>
+<p>In conclusion, the reviewed literature consistently indicates that COVID-19 vaccination is effective in reducing new cases and deaths. While the impact varies globally due to differences in vaccine distribution and uptake, the overall trend underscores the critical role of vaccination in controlling the pandemic. The variations observed in different regions and among various demographics also point to the need for tailored vaccination strategies and equitable vaccine distribution to maximize public health benefits.</p>
+</section>
+<section id="var---daily-new-confirmed-deaths-in-the-us-hospital-patients-and-icu-patients" class="level2">
+<h2 class="anchored" data-anchor-id="var---daily-new-confirmed-deaths-in-the-us-hospital-patients-and-icu-patients">VAR - Daily New Confirmed Deaths in the US, Hospital Patients, and ICU Patients</h2>
+<section id="exploratory-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="exploratory-analysis">Exploratory Analysis</h3>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot Timeseries of all 3 variables</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(var_data, <span class="at">facets =</span> T) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Correlation Time Series Plots"</span>)<span class="sc">+</span><span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="ARIMAX-SARIMAX-VAR_files/figure-html/plot1-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot Pairs</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(<span class="fu">cbind</span>(<span class="at">New_Deaths=</span>new_deaths_ts, <span class="at">ICU_Patients=</span>icu_ts, <span class="at">Hospital_Patients=</span>hosp_ts))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="ARIMAX-SARIMAX-VAR_files/figure-html/plot2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>The “icu_ts” plot shows fluctuations similar to “new_deaths_ts” but with less pronounced peaks, suggesting that ICU admissions follow a similar trend as deaths but might not correlate perfectly. The “hosp_ts” plot likely shows the number of hospital patients over time, which, like the ICU data, exhibits waves of increases and decreases. The pattern might follow a similar trend to the ICU and death data, potentially with a lead time as hospital admissions typically precede ICU admissions and deaths.</p>
+<p>The scatterplot between “New_Deaths” and “ICU_Patients” might show a positive correlation, indicated by the clustering of points along an upward trajectory. This suggests that as ICU admissions increase, the number of deaths also increases, which is expected as more severe cases lead to higher mortality. The scatterplot between “ICU_Patients” and “Hospital_Patients” probably shows a strong positive correlation, as a high number of hospital admissions could lead to more patients requiring ICU care.</p>
+</section>
+<section id="fitting-varp" class="level3">
+<h3 class="anchored" data-anchor-id="fitting-varp">Fitting VAR(p)</h3>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">VARselect</span>(var_data, <span class="at">lag.max =</span> <span class="dv">10</span>, <span class="at">type =</span> <span class="st">"const"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>$selection
+AIC(n)  HQ(n)  SC(n) FPE(n) 
+    10      8      8     10 
+
+$criteria
+                  1            2            3            4            5
+AIC(n) 3.721412e+01 3.659801e+01 3.636002e+01 3.623836e+01 3.606997e+01
+HQ(n)  3.724355e+01 3.664952e+01 3.643359e+01 3.633401e+01 3.618769e+01
+SC(n)  3.729036e+01 3.673143e+01 3.655061e+01 3.648614e+01 3.637492e+01
+FPE(n) 1.451738e+16 7.840012e+15 6.179557e+15 5.471747e+15 4.623790e+15
+                  6            7            8            9           10
+AIC(n) 3.560885e+01 3.530470e+01 3.510303e+01 3.508653e+01 3.507037e+01
+HQ(n)  3.574864e+01 3.546656e+01 3.528697e+01 3.529254e+01 3.529846e+01
+SC(n)  3.597098e+01 3.572401e+01 3.557952e+01 3.562020e+01 3.566122e+01
+FPE(n) 2.915694e+15 2.151099e+15 1.758284e+15 1.729570e+15 1.701919e+15</code></pre>
+</div>
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Summary VAR(10)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Summary VAR(8)</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(vars<span class="sc">::</span><span class="fu">VAR</span>(var_data, <span class="at">p=</span><span class="dv">10</span>, <span class="at">type=</span><span class="fu">c</span>(<span class="st">'const'</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+VAR Estimation Results:
+========================= 
+Endogenous variables: new_deaths_ts, icu_ts, hosp_ts 
+Deterministic variables: const 
+Sample size: 721 
+Log Likelihood: -15619.034 
+Roots of the characteristic polynomial:
+0.9888 0.9888 0.9855 0.9855 0.9771 0.9771 0.9593 0.9593 0.9329 0.8817 0.8817 0.8768 0.8768 0.8729 0.8729 0.8317 0.8317 0.817 0.817 0.8146 0.8146 0.7998 0.7998 0.7626 0.7128 0.4857 0.4782 0.4782 0.4084 0.2348
+Call:
+vars::VAR(y = var_data, p = 10, type = c("const"))
+
+
+Estimation results for equation new_deaths_ts: 
+============================================== 
+new_deaths_ts = new_deaths_ts.l1 + icu_ts.l1 + hosp_ts.l1 + new_deaths_ts.l2 + icu_ts.l2 + hosp_ts.l2 + new_deaths_ts.l3 + icu_ts.l3 + hosp_ts.l3 + new_deaths_ts.l4 + icu_ts.l4 + hosp_ts.l4 + new_deaths_ts.l5 + icu_ts.l5 + hosp_ts.l5 + new_deaths_ts.l6 + icu_ts.l6 + hosp_ts.l6 + new_deaths_ts.l7 + icu_ts.l7 + hosp_ts.l7 + new_deaths_ts.l8 + icu_ts.l8 + hosp_ts.l8 + new_deaths_ts.l9 + icu_ts.l9 + hosp_ts.l9 + new_deaths_ts.l10 + icu_ts.l10 + hosp_ts.l10 + const 
+
+                    Estimate Std. Error t value Pr(&gt;|t|)    
+new_deaths_ts.l1    0.327715   0.037994   8.625  &lt; 2e-16 ***
+icu_ts.l1          -0.020742   0.081921  -0.253 0.800188    
+hosp_ts.l1         -0.057217   0.014777  -3.872 0.000118 ***
+new_deaths_ts.l2   -0.087889   0.039796  -2.209 0.027537 *  
+icu_ts.l2           0.019591   0.107480   0.182 0.855419    
+hosp_ts.l2          0.083567   0.021184   3.945  8.8e-05 ***
+new_deaths_ts.l3    0.002839   0.040004   0.071 0.943444    
+icu_ts.l3           0.173186   0.104094   1.664 0.096618 .  
+hosp_ts.l3         -0.020234   0.021187  -0.955 0.339903    
+new_deaths_ts.l4    0.007016   0.035516   0.198 0.843449    
+icu_ts.l4          -0.178972   0.104009  -1.721 0.085746 .  
+hosp_ts.l4          0.028808   0.021156   1.362 0.173737    
+new_deaths_ts.l5   -0.109857   0.034449  -3.189 0.001492 ** 
+icu_ts.l5           0.048250   0.104011   0.464 0.642869    
+hosp_ts.l5         -0.045305   0.021013  -2.156 0.031429 *  
+new_deaths_ts.l6    0.200848   0.034387   5.841  8.0e-09 ***
+icu_ts.l6           0.018764   0.102552   0.183 0.854872    
+hosp_ts.l6          0.009816   0.020949   0.469 0.639526    
+new_deaths_ts.l7    0.457076   0.035449  12.894  &lt; 2e-16 ***
+icu_ts.l7          -0.034151   0.102600  -0.333 0.739345    
+hosp_ts.l7         -0.004347   0.020889  -0.208 0.835198    
+new_deaths_ts.l8   -0.022132   0.039590  -0.559 0.576321    
+icu_ts.l8          -0.014865   0.103011  -0.144 0.885299    
+hosp_ts.l8         -0.006256   0.020752  -0.301 0.763159    
+new_deaths_ts.l9   -0.087018   0.038837  -2.241 0.025370 *  
+icu_ts.l9          -0.081341   0.103077  -0.789 0.430307    
+hosp_ts.l9          0.031191   0.020559   1.517 0.129696    
+new_deaths_ts.l10   0.082077   0.036355   2.258 0.024278 *  
+icu_ts.l10          0.077634   0.075250   1.032 0.302585    
+hosp_ts.l10        -0.015651   0.014698  -1.065 0.287322    
+const             -47.786431  22.706221  -2.105 0.035691 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+
+Residual standard error: 302.1 on 690 degrees of freedom
+Multiple R-Squared: 0.9025, Adjusted R-squared: 0.8982 
+F-statistic: 212.8 on 30 and 690 DF,  p-value: &lt; 2.2e-16 
+
+
+Estimation results for equation icu_ts: 
+======================================= 
+icu_ts = new_deaths_ts.l1 + icu_ts.l1 + hosp_ts.l1 + new_deaths_ts.l2 + icu_ts.l2 + hosp_ts.l2 + new_deaths_ts.l3 + icu_ts.l3 + hosp_ts.l3 + new_deaths_ts.l4 + icu_ts.l4 + hosp_ts.l4 + new_deaths_ts.l5 + icu_ts.l5 + hosp_ts.l5 + new_deaths_ts.l6 + icu_ts.l6 + hosp_ts.l6 + new_deaths_ts.l7 + icu_ts.l7 + hosp_ts.l7 + new_deaths_ts.l8 + icu_ts.l8 + hosp_ts.l8 + new_deaths_ts.l9 + icu_ts.l9 + hosp_ts.l9 + new_deaths_ts.l10 + icu_ts.l10 + hosp_ts.l10 + const 
+
+                    Estimate Std. Error t value Pr(&gt;|t|)    
+new_deaths_ts.l1   0.0029745  0.0209510   0.142 0.887141    
+icu_ts.l1          0.9272595  0.0451731  20.527  &lt; 2e-16 ***
+hosp_ts.l1         0.0176839  0.0081483   2.170 0.030329 *  
+new_deaths_ts.l2   0.0473695  0.0219443   2.159 0.031224 *  
+icu_ts.l2          0.1736561  0.0592671   2.930 0.003501 ** 
+hosp_ts.l2        -0.0002385  0.0116813  -0.020 0.983720    
+new_deaths_ts.l3   0.0181799  0.0220592   0.824 0.410144    
+icu_ts.l3         -0.0780128  0.0574004  -1.359 0.174559    
+hosp_ts.l3         0.0023755  0.0116833   0.203 0.838942    
+new_deaths_ts.l4   0.0419309  0.0195843   2.141 0.032620 *  
+icu_ts.l4          0.0022318  0.0573532   0.039 0.968971    
+hosp_ts.l4        -0.0244430  0.0116658  -2.095 0.036511 *  
+new_deaths_ts.l5  -0.0105252  0.0189961  -0.554 0.579709    
+icu_ts.l5          0.0604113  0.0573541   1.053 0.292570    
+hosp_ts.l5         0.0173592  0.0115873   1.498 0.134560    
+new_deaths_ts.l6  -0.0379871  0.0189619  -2.003 0.045531 *  
+icu_ts.l6         -0.0420519  0.0565499  -0.744 0.457357    
+hosp_ts.l6         0.0020607  0.0115516   0.178 0.858469    
+new_deaths_ts.l7  -0.0019781  0.0195474  -0.101 0.919423    
+icu_ts.l7          0.2727134  0.0565763   4.820 1.76e-06 ***
+hosp_ts.l7         0.0043068  0.0115189   0.374 0.708598    
+new_deaths_ts.l8   0.0208004  0.0218311   0.953 0.341030    
+icu_ts.l8         -0.2315191  0.0568031  -4.076 5.12e-05 ***
+hosp_ts.l8        -0.0231636  0.0114430  -2.024 0.043327 *  
+new_deaths_ts.l9  -0.0396008  0.0214157  -1.849 0.064864 .  
+icu_ts.l9         -0.1490258  0.0568393  -2.622 0.008937 ** 
+hosp_ts.l9        -0.0126608  0.0113369  -1.117 0.264477    
+new_deaths_ts.l10  0.0091967  0.0200469   0.459 0.646550    
+icu_ts.l10         0.0653495  0.0414950   1.575 0.115743    
+hosp_ts.l10        0.0143484  0.0081049   1.770 0.077110 .  
+const             44.3890802 12.5208093   3.545 0.000419 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+
+Residual standard error: 166.6 on 690 degrees of freedom
+Multiple R-Squared: 0.9996, Adjusted R-squared: 0.9996 
+F-statistic: 5.445e+04 on 30 and 690 DF,  p-value: &lt; 2.2e-16 
+
+
+Estimation results for equation hosp_ts: 
+======================================== 
+hosp_ts = new_deaths_ts.l1 + icu_ts.l1 + hosp_ts.l1 + new_deaths_ts.l2 + icu_ts.l2 + hosp_ts.l2 + new_deaths_ts.l3 + icu_ts.l3 + hosp_ts.l3 + new_deaths_ts.l4 + icu_ts.l4 + hosp_ts.l4 + new_deaths_ts.l5 + icu_ts.l5 + hosp_ts.l5 + new_deaths_ts.l6 + icu_ts.l6 + hosp_ts.l6 + new_deaths_ts.l7 + icu_ts.l7 + hosp_ts.l7 + new_deaths_ts.l8 + icu_ts.l8 + hosp_ts.l8 + new_deaths_ts.l9 + icu_ts.l9 + hosp_ts.l9 + new_deaths_ts.l10 + icu_ts.l10 + hosp_ts.l10 + const 
+
+                    Estimate Std. Error t value Pr(&gt;|t|)    
+new_deaths_ts.l1   -0.114957   0.115580  -0.995  0.32027    
+icu_ts.l1           0.089584   0.249205   0.359  0.71935    
+hosp_ts.l1          1.104448   0.044952  24.570  &lt; 2e-16 ***
+new_deaths_ts.l2    0.158645   0.121060   1.310  0.19047    
+icu_ts.l2           0.908556   0.326957   2.779  0.00560 ** 
+hosp_ts.l2         -0.056499   0.064442  -0.877  0.38093    
+new_deaths_ts.l3    0.262472   0.121694   2.157  0.03136 *  
+icu_ts.l3          -1.264251   0.316659  -3.992 7.24e-05 ***
+hosp_ts.l3          0.113914   0.064453   1.767  0.07761 .  
+new_deaths_ts.l4    0.193323   0.108040   1.789  0.07400 .  
+icu_ts.l4          -0.118625   0.316399  -0.375  0.70783    
+hosp_ts.l4         -0.089850   0.064357  -1.396  0.16313    
+new_deaths_ts.l5    0.053538   0.104795   0.511  0.60960    
+icu_ts.l5           0.494735   0.316404   1.564  0.11837    
+hosp_ts.l5          0.087882   0.063923   1.375  0.16964    
+new_deaths_ts.l6   -0.398812   0.104607  -3.812  0.00015 ***
+icu_ts.l6          -0.857383   0.311967  -2.748  0.00615 ** 
+hosp_ts.l6         -0.007494   0.063726  -0.118  0.90642    
+new_deaths_ts.l7    0.281324   0.107836   2.609  0.00928 ** 
+icu_ts.l7           0.929703   0.312113   2.979  0.00300 ** 
+hosp_ts.l7          0.121091   0.063546   1.906  0.05712 .  
+new_deaths_ts.l8   -0.027177   0.120435  -0.226  0.82154    
+icu_ts.l8           0.021918   0.313364   0.070  0.94426    
+hosp_ts.l8         -0.158762   0.063127  -2.515  0.01213 *  
+new_deaths_ts.l9   -0.052870   0.118144  -0.448  0.65465    
+icu_ts.l9          -0.386696   0.313564  -1.233  0.21791    
+hosp_ts.l9         -0.280582   0.062542  -4.486 8.49e-06 ***
+new_deaths_ts.l10   0.003540   0.110592   0.032  0.97447    
+icu_ts.l10          0.214646   0.228914   0.938  0.34874    
+hosp_ts.l10         0.145883   0.044712   3.263  0.00116 ** 
+const             210.933125  69.073198   3.054  0.00235 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+
+Residual standard error: 918.9 on 690 degrees of freedom
+Multiple R-Squared: 0.9994, Adjusted R-squared: 0.9993 
+F-statistic: 3.539e+04 on 30 and 690 DF,  p-value: &lt; 2.2e-16 
+
+
+
+Covariance matrix of residuals:
+              new_deaths_ts icu_ts hosp_ts
+new_deaths_ts         91242  -3743   -9817
+icu_ts                -3743  27744   83031
+hosp_ts               -9817  83031  844356
+
+Correlation matrix of residuals:
+              new_deaths_ts  icu_ts  hosp_ts
+new_deaths_ts       1.00000 -0.0744 -0.03537
+icu_ts             -0.07440  1.0000  0.54249
+hosp_ts            -0.03537  0.5425  1.00000</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(vars<span class="sc">::</span><span class="fu">VAR</span>(var_data, <span class="at">p=</span><span class="dv">8</span>, <span class="at">type=</span><span class="fu">c</span>(<span class="st">'const'</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+VAR Estimation Results:
+========================= 
+Endogenous variables: new_deaths_ts, icu_ts, hosp_ts 
+Deterministic variables: const 
+Sample size: 723 
+Log Likelihood: -15719.638 
+Roots of the characteristic polynomial:
+0.9874 0.9874 0.9839 0.9839 0.9781 0.9781 0.945 0.945 0.9431 0.8818 0.8818 0.8519 0.8519 0.8372 0.8372 0.8332 0.8332 0.8208 0.8208 0.7678 0.7678 0.7261 0.7261 0.09812
+Call:
+vars::VAR(y = var_data, p = 8, type = c("const"))
+
+
+Estimation results for equation new_deaths_ts: 
+============================================== 
+new_deaths_ts = new_deaths_ts.l1 + icu_ts.l1 + hosp_ts.l1 + new_deaths_ts.l2 + icu_ts.l2 + hosp_ts.l2 + new_deaths_ts.l3 + icu_ts.l3 + hosp_ts.l3 + new_deaths_ts.l4 + icu_ts.l4 + hosp_ts.l4 + new_deaths_ts.l5 + icu_ts.l5 + hosp_ts.l5 + new_deaths_ts.l6 + icu_ts.l6 + hosp_ts.l6 + new_deaths_ts.l7 + icu_ts.l7 + hosp_ts.l7 + new_deaths_ts.l8 + icu_ts.l8 + hosp_ts.l8 + const 
+
+                   Estimate Std. Error t value Pr(&gt;|t|)    
+new_deaths_ts.l1  3.254e-01  3.784e-02   8.598  &lt; 2e-16 ***
+icu_ts.l1        -5.010e-02  7.365e-02  -0.680 0.496566    
+hosp_ts.l1       -5.794e-02  1.407e-02  -4.119 4.27e-05 ***
+new_deaths_ts.l2 -1.164e-01  3.508e-02  -3.318 0.000955 ***
+icu_ts.l2         2.950e-02  1.026e-01   0.287 0.773897    
+hosp_ts.l2        8.572e-02  2.083e-02   4.115 4.33e-05 ***
+new_deaths_ts.l3  3.116e-02  3.411e-02   0.914 0.361233    
+icu_ts.l3         1.901e-01  1.025e-01   1.854 0.064118 .  
+hosp_ts.l3       -1.770e-02  2.083e-02  -0.850 0.395642    
+new_deaths_ts.l4  2.707e-02  3.386e-02   0.799 0.424374    
+icu_ts.l4        -1.882e-01  1.020e-01  -1.846 0.065324 .  
+hosp_ts.l4        2.321e-02  2.069e-02   1.122 0.262432    
+new_deaths_ts.l5 -1.176e-01  3.404e-02  -3.455 0.000584 ***
+icu_ts.l5         3.541e-02  1.015e-01   0.349 0.727287    
+hosp_ts.l5       -4.386e-02  2.076e-02  -2.113 0.034984 *  
+new_deaths_ts.l6  2.026e-01  3.413e-02   5.937 4.57e-09 ***
+icu_ts.l6         4.782e-02  1.010e-01   0.473 0.636167    
+hosp_ts.l6        8.415e-03  2.070e-02   0.407 0.684465    
+new_deaths_ts.l7  4.797e-01  3.422e-02  14.017  &lt; 2e-16 ***
+icu_ts.l7        -3.686e-02  1.009e-01  -0.365 0.714865    
+hosp_ts.l7        2.031e-04  2.039e-02   0.010 0.992054    
+new_deaths_ts.l8 -4.895e-02  3.621e-02  -1.352 0.176888    
+icu_ts.l8        -2.054e-02  7.163e-02  -0.287 0.774370    
+hosp_ts.l8        5.997e-03  1.409e-02   0.425 0.670641    
+const            -4.196e+01  2.206e+01  -1.902 0.057543 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+
+Residual standard error: 302.8 on 698 degrees of freedom
+Multiple R-Squared: 0.9008, Adjusted R-squared: 0.8974 
+F-statistic: 264.2 on 24 and 698 DF,  p-value: &lt; 2.2e-16 
+
+
+Estimation results for equation icu_ts: 
+======================================= 
+icu_ts = new_deaths_ts.l1 + icu_ts.l1 + hosp_ts.l1 + new_deaths_ts.l2 + icu_ts.l2 + hosp_ts.l2 + new_deaths_ts.l3 + icu_ts.l3 + hosp_ts.l3 + new_deaths_ts.l4 + icu_ts.l4 + hosp_ts.l4 + new_deaths_ts.l5 + icu_ts.l5 + hosp_ts.l5 + new_deaths_ts.l6 + icu_ts.l6 + hosp_ts.l6 + new_deaths_ts.l7 + icu_ts.l7 + hosp_ts.l7 + new_deaths_ts.l8 + icu_ts.l8 + hosp_ts.l8 + const 
+
+                  Estimate Std. Error t value Pr(&gt;|t|)    
+new_deaths_ts.l1  0.006811   0.021555   0.316 0.752103    
+icu_ts.l1         0.943548   0.041951  22.492  &lt; 2e-16 ***
+hosp_ts.l1        0.016133   0.008012   2.014 0.044439 *  
+new_deaths_ts.l2  0.031038   0.019981   1.553 0.120788    
+icu_ts.l2         0.118300   0.058455   2.024 0.043375 *  
+hosp_ts.l2       -0.003767   0.011865  -0.317 0.750967    
+new_deaths_ts.l3  0.005092   0.019427   0.262 0.793293    
+icu_ts.l3        -0.019454   0.058385  -0.333 0.739089    
+hosp_ts.l3        0.011128   0.011863   0.938 0.348534    
+new_deaths_ts.l4  0.056087   0.019286   2.908 0.003751 ** 
+icu_ts.l4        -0.061904   0.058076  -1.066 0.286831    
+hosp_ts.l4       -0.037058   0.011786  -3.144 0.001736 ** 
+new_deaths_ts.l5 -0.014330   0.019388  -0.739 0.460080    
+icu_ts.l5         0.133387   0.057808   2.307 0.021323 *  
+hosp_ts.l5        0.027497   0.011824   2.325 0.020333 *  
+new_deaths_ts.l6 -0.037338   0.019439  -1.921 0.055166 .  
+icu_ts.l6        -0.034694   0.057546  -0.603 0.546778    
+hosp_ts.l6       -0.001643   0.011789  -0.139 0.889171    
+new_deaths_ts.l7 -0.004833   0.019492  -0.248 0.804242    
+icu_ts.l7         0.204202   0.057448   3.555 0.000404 ***
+hosp_ts.l7        0.014777   0.011612   1.273 0.203617    
+new_deaths_ts.l8  0.019637   0.020625   0.952 0.341385    
+icu_ts.l8        -0.281813   0.040799  -6.907 1.11e-11 ***
+hosp_ts.l8       -0.029890   0.008028  -3.723 0.000213 ***
+const            46.701628  12.563784   3.717 0.000218 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+
+Residual standard error: 172.5 on 698 degrees of freedom
+Multiple R-Squared: 0.9995, Adjusted R-squared: 0.9995 
+F-statistic: 6.349e+04 on 24 and 698 DF,  p-value: &lt; 2.2e-16 
+
+
+Estimation results for equation hosp_ts: 
+======================================== 
+hosp_ts = new_deaths_ts.l1 + icu_ts.l1 + hosp_ts.l1 + new_deaths_ts.l2 + icu_ts.l2 + hosp_ts.l2 + new_deaths_ts.l3 + icu_ts.l3 + hosp_ts.l3 + new_deaths_ts.l4 + icu_ts.l4 + hosp_ts.l4 + new_deaths_ts.l5 + icu_ts.l5 + hosp_ts.l5 + new_deaths_ts.l6 + icu_ts.l6 + hosp_ts.l6 + new_deaths_ts.l7 + icu_ts.l7 + hosp_ts.l7 + new_deaths_ts.l8 + icu_ts.l8 + hosp_ts.l8 + const 
+
+                  Estimate Std. Error t value Pr(&gt;|t|)    
+new_deaths_ts.l1  -0.10799    0.11767  -0.918 0.359091    
+icu_ts.l1          0.17936    0.22901   0.783 0.433765    
+hosp_ts.l1         1.11381    0.04374  25.466  &lt; 2e-16 ***
+new_deaths_ts.l2   0.11474    0.10907   1.052 0.293167    
+icu_ts.l2          0.65129    0.31910   2.041 0.041628 *  
+hosp_ts.l2        -0.09295    0.06477  -1.435 0.151727    
+new_deaths_ts.l3   0.23116    0.10605   2.180 0.029606 *  
+icu_ts.l3         -1.16170    0.31872  -3.645 0.000287 ***
+hosp_ts.l3         0.17041    0.06476   2.631 0.008689 ** 
+new_deaths_ts.l4   0.29553    0.10528   2.807 0.005140 ** 
+icu_ts.l4         -0.18435    0.31703  -0.581 0.561105    
+hosp_ts.l4        -0.14710    0.06434  -2.286 0.022540 *  
+new_deaths_ts.l5   0.02368    0.10584   0.224 0.823010    
+icu_ts.l5          0.76787    0.31557   2.433 0.015213 *  
+hosp_ts.l5         0.14955    0.06455   2.317 0.020797 *  
+new_deaths_ts.l6  -0.41670    0.10612  -3.927 9.46e-05 ***
+icu_ts.l6         -0.96670    0.31414  -3.077 0.002171 ** 
+hosp_ts.l6        -0.04013    0.06435  -0.624 0.533087    
+new_deaths_ts.l7   0.16365    0.10640   1.538 0.124495    
+icu_ts.l7          0.70499    0.31360   2.248 0.024887 *  
+hosp_ts.l7         0.13112    0.06339   2.068 0.038967 *  
+new_deaths_ts.l8   0.04158    0.11259   0.369 0.712004    
+icu_ts.l8          0.04308    0.22272   0.193 0.846670    
+hosp_ts.l8        -0.30499    0.04382  -6.959 7.90e-12 ***
+const            214.50350   68.58498   3.128 0.001836 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+
+Residual standard error: 941.5 on 698 degrees of freedom
+Multiple R-Squared: 0.9993, Adjusted R-squared: 0.9993 
+F-statistic: 4.214e+04 on 24 and 698 DF,  p-value: &lt; 2.2e-16 
+
+
+
+Covariance matrix of residuals:
+              new_deaths_ts icu_ts hosp_ts
+new_deaths_ts         91687  -3044  -12186
+icu_ts                -3044  29744   87327
+hosp_ts              -12186  87327  886383
+
+Correlation matrix of residuals:
+              new_deaths_ts   icu_ts  hosp_ts
+new_deaths_ts       1.00000 -0.05829 -0.04275
+icu_ts             -0.05829  1.00000  0.53782
+hosp_ts            -0.04275  0.53782  1.00000</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>The log likelihood is higher (closer to zero) for VAR(10) (-15619.034) compared to VAR(8) (-15719.638), suggesting that the VAR(10) model may fit the data better. In both models, many of the lagged values of new_deaths_ts, icu_ts, and hosp_ts are significant predictors of themselves and each other, which suggests that past values have a substantial influence on current values.</p>
+<p>The Multiple R-Squared values are high for both models, indicating a good fit. The Adjusted R-squared is slightly higher for VAR(10) than for VAR(8), which suggests that the additional lags in VAR(10) are providing useful information. The standard errors of the residuals are slightly lower for VAR(10), indicating a better fit to the data.</p>
+</section>
+<section id="cross-validation" class="level3">
+<h3 class="anchored" data-anchor-id="cross-validation">Cross Validation</h3>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Selecting relevant columns and handling NAs with interpolation</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>time_series_data <span class="ot">&lt;-</span> <span class="fu">na.approx</span>(filtered_data[, <span class="fu">c</span>(<span class="st">"new_deaths"</span>, <span class="st">"icu_patients"</span>, <span class="st">"hosp_patients"</span>)])</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Split data into training and testing sets (80-20 split)</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>split_ratio <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>split_index <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fu">nrow</span>(time_series_data) <span class="sc">*</span> split_ratio)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> <span class="fu">head</span>(time_series_data, split_index)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> <span class="fu">tail</span>(time_series_data, <span class="fu">nrow</span>(time_series_data) <span class="sc">-</span> split_index)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize vector to store RMSEs</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>rmse_values <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="dv">10</span>)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Loop through each lag order (1 to 10)</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) {</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  model <span class="ot">&lt;-</span> <span class="fu">VAR</span>(train_data, <span class="at">p =</span> i, <span class="at">type =</span> <span class="st">"const"</span>)</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  forecasted <span class="ot">&lt;-</span> <span class="fu">predict</span>(model, <span class="at">n.ahead =</span> <span class="fu">nrow</span>(test_data))</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  forecasted_values <span class="ot">&lt;-</span> <span class="fu">sapply</span>(forecasted<span class="sc">$</span>fcst, <span class="cf">function</span>(x) x[,<span class="dv">1</span>])  <span class="co"># Extracts forecasts</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Calculate RMSE and store it</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  rmse_values[i] <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((test_data <span class="sc">-</span> forecasted_values)<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting RMSEs</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, rmse_values, <span class="at">type =</span> <span class="st">"b"</span>, <span class="at">xlab =</span> <span class="st">"Lag Order"</span>, <span class="at">ylab =</span> <span class="st">"RMSE"</span>, <span class="at">main =</span> <span class="st">"RMSE vs Lag Order"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="ARIMAX-SARIMAX-VAR_files/figure-html/cv1-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Because <code>VAR(4)</code> has the lowest RMSE, it indicates that it might generalize better when making predictions, despite not fitting the training data as closely as <code>VAR(10)</code>. My primary goal is forecasting, the model with the lower RMSE might be preferable, as it indicates better predictive performance. Besides, a model with too many lags might overfit the historical data, leading to poorer performance on new data. The lower RMSE of <code>VAR(4)</code> could suggest it is less prone to overfitting compared to <code>VAR(10)</code>. Therefore, I would pick <code>VAR(4)</code> to forecast.</p>
+</section>
+<section id="forecasting" class="level3">
+<h3 class="anchored" data-anchor-id="forecasting">Forecasting</h3>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fit1 <span class="ot">&lt;-</span> <span class="fu">VAR</span>(var_data, <span class="at">p =</span><span class="dv">4</span>, <span class="at">type =</span> <span class="st">"const"</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(<span class="fu">forecast</span>(fit1, <span class="at">h =</span> <span class="dv">60</span>))<span class="sc">+</span><span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="ARIMAX-SARIMAX-VAR_files/figure-html/forecast1-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="arimax---daily-new-confirmed-cases-in-the-us-and-people-vaccinated" class="level2">
+<h2 class="anchored" data-anchor-id="arimax---daily-new-confirmed-cases-in-the-us-and-people-vaccinated">ARIMAX - Daily New Confirmed Cases in the US, and People Vaccinated</h2>
+<section id="exploratory-analysis-1" class="level3">
+<h3 class="anchored" data-anchor-id="exploratory-analysis-1">Exploratory Analysis</h3>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot Timeseries of all 3 variables</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(var_data2, <span class="at">facets =</span> T) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Correlation Time Series Plots"</span>)<span class="sc">+</span><span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="ARIMAX-SARIMAX-VAR_files/figure-html/plot3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="auto.arima" class="level3">
+<h3 class="anchored" data-anchor-id="auto.arima">Auto.Arima</h3>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit ARIMAX model</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>arimax_model <span class="ot">&lt;-</span> <span class="fu">auto.arima</span>(new_cases_ts, <span class="at">xreg =</span> vacc_ts)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(arimax_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Series: new_cases_ts 
+Regression with ARIMA(3,1,2) errors 
+
+Coefficients:
+         ar1      ar2      ar3      ma1     ma2    xreg
+      0.8896  -0.5252  -0.2790  -1.3627  0.7798  -5e-04
+s.e.  0.0641   0.0672   0.0713   0.0552  0.0415   6e-04
+
+sigma^2 = 429712594:  log likelihood = -4143.79
+AIC=8301.57   AICc=8301.89   BIC=8328.87
+
+Training set error measures:
+                    ME     RMSE      MAE       MPE     MAPE       MASE
+Training set -105.7928 20530.32 12979.24 -4.348986 17.59038 0.07136468
+                    ACF1
+Training set -0.06542263</code></pre>
+</div>
+</div>
+<p>The auto.arima function in <em>R</em> suggests an <code>ARIMAX(3,1,2)</code> model as the best fit for the data.</p>
+</section>
+<section id="fitting-arimax-model-manually" class="level3">
+<h3 class="anchored" data-anchor-id="fitting-arimax-model-manually">Fitting ARIMAX Model Manually</h3>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>fit.reg <span class="ot">&lt;-</span> <span class="fu">lm</span>(new_cases <span class="sc">~</span> people_vaccinated, <span class="at">data=</span>filtered_data)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.reg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = new_cases ~ people_vaccinated, data = filtered_data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-114533  -77412  -39840   21840 1145560 
+
+Coefficients:
+                   Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)       1.114e+05  1.529e+04   7.284 9.07e-13 ***
+people_vaccinated 3.478e-05  7.187e-05   0.484    0.629    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 146800 on 674 degrees of freedom
+Multiple R-squared:  0.0003474, Adjusted R-squared:  -0.001136 
+F-statistic: 0.2342 on 1 and 674 DF,  p-value: 0.6286</code></pre>
+</div>
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">ACF Plot of Residuals</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">PACF Plot of Residuals</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(<span class="fu">residuals</span>(fit.reg))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="ARIMAX-SARIMAX-VAR_files/figure-html/acf1-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggPacf</span>(<span class="fu">residuals</span>(fit.reg))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="ARIMAX-SARIMAX-VAR_files/figure-html/pacf1-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">ACF Plot of first-differenced Residuals</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">PACF Plot of first-differenced Residuals</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(<span class="fu">residuals</span>(fit.reg) <span class="sc">%&gt;%</span> <span class="fu">diff</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="ARIMAX-SARIMAX-VAR_files/figure-html/acf2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggPacf</span>(<span class="fu">residuals</span>(fit.reg) <span class="sc">%&gt;%</span> <span class="fu">diff</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="ARIMAX-SARIMAX-VAR_files/figure-html/pacf2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Finding the model parameters.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>d<span class="ot">=</span><span class="dv">1</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>i<span class="ot">=</span><span class="dv">1</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>temp<span class="ot">=</span> <span class="fu">data.frame</span>()</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>ls<span class="ot">=</span><span class="fu">matrix</span>(<span class="fu">rep</span>(<span class="cn">NA</span>,<span class="dv">6</span><span class="sc">*</span><span class="dv">12</span>),<span class="at">nrow=</span><span class="dv">12</span>) <span class="co"># roughly nrow = 3x4x1</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (p <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>) <span class="co"># p=0,1,2,3</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(q <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) <span class="co"># q=0,1,2</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(d <span class="cf">in</span> <span class="dv">1</span>) <span class="co"># d=1</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(p<span class="dv">-1</span><span class="sc">+</span>d<span class="sc">+</span>q<span class="dv">-1</span><span class="sc">&lt;=</span><span class="dv">8</span>)</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>      {</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>        model<span class="ot">&lt;-</span> <span class="fu">Arima</span>(new_deaths_ts,<span class="at">order=</span><span class="fu">c</span>(p<span class="dv">-1</span>,d,q<span class="dv">-1</span>)) </span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>        ls[i,]<span class="ot">=</span> <span class="fu">c</span>(p<span class="dv">-1</span>,d,q<span class="dv">-1</span>,model<span class="sc">$</span>aic,model<span class="sc">$</span>bic,model<span class="sc">$</span>aicc)</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>        i<span class="ot">=</span>i<span class="sc">+</span><span class="dv">1</span></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>        <span class="co">#print(i)</span></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>temp<span class="ot">=</span> <span class="fu">as.data.frame</span>(ls)</span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(temp)<span class="ot">=</span> <span class="fu">c</span>(<span class="st">"p"</span>,<span class="st">"d"</span>,<span class="st">"q"</span>,<span class="st">"AIC"</span>,<span class="st">"BIC"</span>,<span class="st">"AICc"</span>)</span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a><span class="co">#temp</span></span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>temp <span class="ot">&lt;-</span> temp[<span class="fu">order</span>(temp<span class="sc">$</span>BIC, <span class="at">decreasing =</span> <span class="cn">FALSE</span>),] </span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(temp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">p</th>
+<th style="text-align: right;">d</th>
+<th style="text-align: right;">q</th>
+<th style="text-align: right;">AIC</th>
+<th style="text-align: right;">BIC</th>
+<th style="text-align: right;">AICc</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">12</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">10848.65</td>
+<td style="text-align: right;">10876.21</td>
+<td style="text-align: right;">10848.77</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">9</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">10853.64</td>
+<td style="text-align: right;">10876.60</td>
+<td style="text-align: right;">10853.72</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">11</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10961.86</td>
+<td style="text-align: right;">10984.83</td>
+<td style="text-align: right;">10961.95</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">8</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10978.49</td>
+<td style="text-align: right;">10996.87</td>
+<td style="text-align: right;">10978.55</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">11027.00</td>
+<td style="text-align: right;">11040.78</td>
+<td style="text-align: right;">11027.04</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">6</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">11026.77</td>
+<td style="text-align: right;">11045.14</td>
+<td style="text-align: right;">11026.83</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">5</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">11097.38</td>
+<td style="text-align: right;">11111.16</td>
+<td style="text-align: right;">11097.41</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">10</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">11152.25</td>
+<td style="text-align: right;">11170.63</td>
+<td style="text-align: right;">11152.31</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">7</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">11173.88</td>
+<td style="text-align: right;">11187.65</td>
+<td style="text-align: right;">11173.91</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">11254.47</td>
+<td style="text-align: right;">11259.07</td>
+<td style="text-align: right;">11254.48</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">11256.19</td>
+<td style="text-align: right;">11265.37</td>
+<td style="text-align: right;">11256.20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">11256.38</td>
+<td style="text-align: right;">11265.57</td>
+<td style="text-align: right;">11256.40</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract lowest AIC</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>temp[<span class="fu">which.min</span>(temp<span class="sc">$</span>AIC),] </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   p d q      AIC      BIC     AICc
+12 3 1 2 10848.65 10876.21 10848.77</code></pre>
+</div>
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract lowest BIC</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>temp[<span class="fu">which.min</span>(temp<span class="sc">$</span>BIC),]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   p d q      AIC      BIC     AICc
+12 3 1 2 10848.65 10876.21 10848.77</code></pre>
+</div>
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract lowest AICc</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>temp[<span class="fu">which.min</span>(temp<span class="sc">$</span>AICc),]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   p d q      AIC      BIC     AICc
+12 3 1 2 10848.65 10876.21 10848.77</code></pre>
+</div>
+</div>
+<p>Both give us the same results: <code>ARIMA(3,1,2)</code> is the best model.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">Arima</span>(new_cases_ts,<span class="at">order=</span><span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">2</span>),<span class="at">xreg=</span>vacc_ts)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Series: new_cases_ts 
+Regression with ARIMA(3,1,2) errors 
+
+Coefficients:
+         ar1      ar2      ar3      ma1     ma2    xreg
+      0.8896  -0.5252  -0.2790  -1.3627  0.7798  -5e-04
+s.e.  0.0641   0.0672   0.0713   0.0552  0.0415   6e-04
+
+sigma^2 = 429712594:  log likelihood = -4143.79
+AIC=8301.57   AICc=8301.89   BIC=8328.87
+
+Training set error measures:
+                    ME     RMSE      MAE       MPE     MAPE       MASE
+Training set -105.7928 20530.32 12979.24 -4.348986 17.59038 0.07136468
+                    ACF1
+Training set -0.06542263</code></pre>
+</div>
+</div>
+</section>
+<section id="model-diagnostics" class="level3">
+<h3 class="anchored" data-anchor-id="model-diagnostics">Model Diagnostics</h3>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">checkresiduals</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="ARIMAX-SARIMAX-VAR_files/figure-html/fit4_output-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Ljung-Box test
+
+data:  Residuals from Regression with ARIMA(3,1,2) errors
+Q* = 375.72, df = 68, p-value &lt; 2.2e-16
+
+Model df: 5.   Total lags used: 73</code></pre>
+</div>
+</div>
+</section>
+<section id="forecasting-1" class="level3">
+<h3 class="anchored" data-anchor-id="forecasting-1">Forecasting</h3>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>fcast_cases <span class="ot">=</span> <span class="fu">forecast</span>(fit, <span class="at">xreg =</span> vacc_ts, <span class="at">h =</span> <span class="dv">30</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(fcast_cases) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">"Date"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"New Cases"</span>)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"Predictions"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="ARIMAX-SARIMAX-VAR_files/figure-html/forecast3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+
+
+<!-- -->
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb32" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "ARIMAX/SARIMAX/VAR Models"</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="co">    page-layout: full</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: show</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="co">    code-copy: true</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a><span class="co">    code-overflow: wrap</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a><span class="co">#bibliography: bibliography.bib</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a><span class="fu">## Summary</span></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>In this section, I will use the VAR model to examine the relationship between the daily number of newly confirmed COVID-19 deaths and the number of ICU patients and the number of hospital patients, and use the ARIMAX model to examine the relationship between the daily number of newly confirmed COVID-19 cases and the number of vaccinated people. relationships and try to create effective predictive models.</span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a><span class="fu">## Literature review</span></span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>I synthesizes findings from three critical studies that investigate the rate of Intensive Care Unit (ICU) admissions and outcomes among patients with coronavirus, as well as factors associated with ICU mortality in COVID-19 patients:</span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>Abate, et al (2020) did a systematic review and meta-analysis aimed to understand the rate of Intensive Care Unit (ICU) admissions and outcomes among coronavirus patients. Their study synthesized data from various observational studies to provide a global perspective on the critical care aspects of COVID-19. It emphasized the variability in ICU admission rates and highlighted the significant factors influencing patient outcomes in ICUs, such as healthcare system capabilities, patient demographics, and infection severity (Abate, S. M., Ahmed Ali, S., Mantfardo, B., &amp; Basu, B., 2020). </span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a>Lavrentieva, A., et al (2023) conducted an observational study, with a critical review of the literature to identify factors associated with ICU mortality in COVID-19 patients. Through analyzing patient data, the research identified key predictors of mortality within ICU environments, such as comorbidities, age, and treatment modalities. The study's findings provide valuable insights for healthcare practitioners in understanding and predicting the risk factors for mortality among critically ill COVID-19 patients (Lavrentieva, A., Kaimakamis, E., Voutsas, V., &amp; Bitzani, M., 2023).</span>
+<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a>Kowsar, R., et al (2023), their article presents a meta- and network analysis to assess the risk of mortality in COVID-19 patients. Combining data from various sources, the study offers a comprehensive view of the factors contributing to patient outcomes during the pandemic. It highlights the complexity of managing COVID-19, particularly in critical care settings, and underscores the importance of understanding various factors, including patient demographics and comorbidities, in determining patient outcomes (Kowsar, R., Rahimi, A. M., Sroka, M., Mansouri, A., Sadeghi, K., Bonakdar, E., Kateb, S. F., &amp; Mahdavi, A. H., 2023).</span>
+<span id="cb32-26"><a href="#cb32-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-27"><a href="#cb32-27" aria-hidden="true" tabindex="-1"></a>The ongoing COVID-19 pandemic has prompted extensive research into the impact of vaccination on the spread and severity of the virus. This literature review synthesizes findings from recent studies to understand better the correlation between daily new COVID-19 cases and vaccination:</span>
+<span id="cb32-28"><a href="#cb32-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-29"><a href="#cb32-29" aria-hidden="true" tabindex="-1"></a>A global study emphasized the effectiveness of COVID-19 vaccination in reducing new cases and deaths. This research, analyzing global vaccine data, concluded that while vaccination significantly curtails the spread and fatality rates of COVID-19, the inequitable distribution of vaccines across countries poses a significant challenge (Global Vaccine Data Analysis, PubMed). This study's findings are crucial in understanding the global dynamics of vaccine impact on COVID-19 cases (Li Z, Liu X, Liu M, Wu Z, Liu Y, Li W, Liu M, Wang X, Gao B, Luo Y, Li X, Tao L, Wang W, Guo X., 2021).</span>
+<span id="cb32-30"><a href="#cb32-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-31"><a href="#cb32-31" aria-hidden="true" tabindex="-1"></a>Focusing on the United States, a study in Nature explored the impact of vaccination across various states. It reported no significant correlation between pre-vaccination growth rates and vaccination rates, suggesting a consistent effectiveness of vaccines across different demographics and geographical areas. This research implies that the effectiveness of COVID-19 vaccines is relatively uniform, regardless of variations in states' demographic and political characteristics (Chen, X., Huang, H., Ju, J. et al., 2022).</span>
+<span id="cb32-32"><a href="#cb32-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-33"><a href="#cb32-33" aria-hidden="true" tabindex="-1"></a>Another research investigated the correlation between COVID-19 vaccine coverage rates and hospitalization on a global scale. This study found a direct relationship between vaccine coverage and the number of hospital and ICU patients, indicating that higher vaccination rates correlate with lower hospitalization rates (Huang C, Yang L, Pan J, Xu X, Peng R., 2022).</span>
+<span id="cb32-34"><a href="#cb32-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-35"><a href="#cb32-35" aria-hidden="true" tabindex="-1"></a>Mathematical modeling studies have also contributed significantly to this topic. Various studies assessed the effectiveness of vaccines, the impact on COVID-19 case numbers, and the role of vaccination in conjunction with non-pharmaceutical interventions. These models provide a predictive insight into the impact of vaccination strategies and their potential to control the pandemic (Moore, S., Hill, E.M., Dyson, L. et al., 2022).</span>
+<span id="cb32-36"><a href="#cb32-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-37"><a href="#cb32-37" aria-hidden="true" tabindex="-1"></a>Lastly, an analysis by Johns Hopkins University revealed a significant negative correlation between vaccination coverage and the incidence and mortality rates of COVID-19 in U.S. counties. This study highlighted the disparities in vaccination uptake and the impact of COVID-19 across different county demographics, such as political affiliation, land use, and socioeconomic status (Ensheng Dong and Lauren Gardner, 2021).</span>
+<span id="cb32-38"><a href="#cb32-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-39"><a href="#cb32-39" aria-hidden="true" tabindex="-1"></a>In conclusion, the reviewed literature consistently indicates that COVID-19 vaccination is effective in reducing new cases and deaths. While the impact varies globally due to differences in vaccine distribution and uptake, the overall trend underscores the critical role of vaccination in controlling the pandemic. The variations observed in different regions and among various demographics also point to the need for tailored vaccination strategies and equitable vaccine distribution to maximize public health benefits.</span>
+<span id="cb32-40"><a href="#cb32-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-41"><a href="#cb32-41" aria-hidden="true" tabindex="-1"></a><span class="in">```{r setup, include=FALSE, message=FALSE, warning=FALSE}</span></span>
+<span id="cb32-42"><a href="#cb32-42" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb32-43"><a href="#cb32-43" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb32-44"><a href="#cb32-44" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb32-45"><a href="#cb32-45" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forecast)</span>
+<span id="cb32-46"><a href="#cb32-46" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(astsa) </span>
+<span id="cb32-47"><a href="#cb32-47" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xts)</span>
+<span id="cb32-48"><a href="#cb32-48" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tseries)</span>
+<span id="cb32-49"><a href="#cb32-49" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fpp2)</span>
+<span id="cb32-50"><a href="#cb32-50" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fma)</span>
+<span id="cb32-51"><a href="#cb32-51" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb32-52"><a href="#cb32-52" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb32-53"><a href="#cb32-53" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(TSstudio)</span>
+<span id="cb32-54"><a href="#cb32-54" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quantmod)</span>
+<span id="cb32-55"><a href="#cb32-55" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyquant)</span>
+<span id="cb32-56"><a href="#cb32-56" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span>
+<span id="cb32-57"><a href="#cb32-57" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(padr)</span>
+<span id="cb32-58"><a href="#cb32-58" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
+<span id="cb32-59"><a href="#cb32-59" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reshape2)</span>
+<span id="cb32-60"><a href="#cb32-60" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(vars)</span>
+<span id="cb32-61"><a href="#cb32-61" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb32-62"><a href="#cb32-62" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-63"><a href="#cb32-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-64"><a href="#cb32-64" aria-hidden="true" tabindex="-1"></a><span class="in">```{r load, include=FALSE, message=FALSE, warning=FALSE}</span></span>
+<span id="cb32-65"><a href="#cb32-65" aria-hidden="true" tabindex="-1"></a>owid_covid_data_us <span class="ot">&lt;-</span> readxl<span class="sc">::</span><span class="fu">read_xlsx</span>(<span class="st">"../data/owid_covid_data_us.xlsx"</span>)</span>
+<span id="cb32-66"><a href="#cb32-66" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-67"><a href="#cb32-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-68"><a href="#cb32-68" aria-hidden="true" tabindex="-1"></a><span class="in">```{r prepare_for_plot,include=FALSE, message=FALSE, warning=FALSE}</span></span>
+<span id="cb32-69"><a href="#cb32-69" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert the 'date' column as date</span></span>
+<span id="cb32-70"><a href="#cb32-70" aria-hidden="true" tabindex="-1"></a>owid_covid_data_us<span class="sc">$</span>date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(owid_covid_data_us<span class="sc">$</span>date)</span>
+<span id="cb32-71"><a href="#cb32-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-72"><a href="#cb32-72" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter data for dates before 2022-10-20</span></span>
+<span id="cb32-73"><a href="#cb32-73" aria-hidden="true" tabindex="-1"></a>owid_covid_data_us <span class="ot">&lt;-</span> owid_covid_data_us <span class="sc">%&gt;%</span> <span class="fu">filter</span>(date <span class="sc">&lt;</span> <span class="fu">as.Date</span>(<span class="st">"2022-10-20"</span>))</span>
+<span id="cb32-74"><a href="#cb32-74" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-75"><a href="#cb32-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-76"><a href="#cb32-76" aria-hidden="true" tabindex="-1"></a><span class="fu">## VAR - Daily New Confirmed Deaths in the US, Hospital Patients, and ICU Patients</span></span>
+<span id="cb32-77"><a href="#cb32-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-78"><a href="#cb32-78" aria-hidden="true" tabindex="-1"></a><span class="fu">### Exploratory Analysis</span></span>
+<span id="cb32-79"><a href="#cb32-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-80"><a href="#cb32-80" aria-hidden="true" tabindex="-1"></a><span class="in">```{r prepare_data,include=FALSE, message=FALSE, warning=FALSE}</span></span>
+<span id="cb32-81"><a href="#cb32-81" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter the data for dates from 2020-07-15 onwards</span></span>
+<span id="cb32-82"><a href="#cb32-82" aria-hidden="true" tabindex="-1"></a>filtered_data <span class="ot">&lt;-</span> owid_covid_data_us <span class="sc">%&gt;%</span> <span class="fu">filter</span>(date <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">"2020-07-15"</span>))</span>
+<span id="cb32-83"><a href="#cb32-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-84"><a href="#cb32-84" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to time series object</span></span>
+<span id="cb32-85"><a href="#cb32-85" aria-hidden="true" tabindex="-1"></a>new_deaths_ts <span class="ot">&lt;-</span> <span class="fu">ts</span>(filtered_data<span class="sc">$</span>new_deaths, <span class="at">start =</span> <span class="dv">2020</span>, <span class="at">end =</span> <span class="dv">2022</span>, <span class="at">frequency=</span><span class="dv">365</span>)</span>
+<span id="cb32-86"><a href="#cb32-86" aria-hidden="true" tabindex="-1"></a>icu_ts <span class="ot">&lt;-</span> <span class="fu">ts</span>(filtered_data<span class="sc">$</span>icu_patients, <span class="at">start =</span> <span class="dv">2020</span>, <span class="at">end =</span> <span class="dv">2022</span>, <span class="at">frequency=</span><span class="dv">365</span>)</span>
+<span id="cb32-87"><a href="#cb32-87" aria-hidden="true" tabindex="-1"></a>hosp_ts <span class="ot">&lt;-</span> <span class="fu">ts</span>(filtered_data<span class="sc">$</span>hosp_patients, <span class="at">start =</span> <span class="dv">2020</span>, <span class="at">end =</span> <span class="dv">2022</span>, <span class="at">frequency=</span><span class="dv">365</span>)</span>
+<span id="cb32-88"><a href="#cb32-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-89"><a href="#cb32-89" aria-hidden="true" tabindex="-1"></a><span class="co"># Handle NAs with interpolation </span></span>
+<span id="cb32-90"><a href="#cb32-90" aria-hidden="true" tabindex="-1"></a>new_deaths_ts <span class="ot">&lt;-</span> <span class="fu">na.interp</span>(new_deaths_ts)</span>
+<span id="cb32-91"><a href="#cb32-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-92"><a href="#cb32-92" aria-hidden="true" tabindex="-1"></a><span class="co"># Create var data by combining three timeseries</span></span>
+<span id="cb32-93"><a href="#cb32-93" aria-hidden="true" tabindex="-1"></a>var_data <span class="ot">=</span> <span class="fu">window</span>(<span class="fu">ts.union</span>(new_deaths_ts, icu_ts, hosp_ts))</span>
+<span id="cb32-94"><a href="#cb32-94" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-95"><a href="#cb32-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-96"><a href="#cb32-96" aria-hidden="true" tabindex="-1"></a><span class="in">```{r plot1,message=FALSE, warning=FALSE}</span></span>
+<span id="cb32-97"><a href="#cb32-97" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot Timeseries of all 3 variables</span></span>
+<span id="cb32-98"><a href="#cb32-98" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(var_data, <span class="at">facets =</span> T) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Correlation Time Series Plots"</span>)<span class="sc">+</span><span class="fu">theme_bw</span>()</span>
+<span id="cb32-99"><a href="#cb32-99" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-100"><a href="#cb32-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-101"><a href="#cb32-101" aria-hidden="true" tabindex="-1"></a><span class="in">```{r plot2,message=FALSE, warning=FALSE}</span></span>
+<span id="cb32-102"><a href="#cb32-102" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot Pairs</span></span>
+<span id="cb32-103"><a href="#cb32-103" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(<span class="fu">cbind</span>(<span class="at">New_Deaths=</span>new_deaths_ts, <span class="at">ICU_Patients=</span>icu_ts, <span class="at">Hospital_Patients=</span>hosp_ts))</span>
+<span id="cb32-104"><a href="#cb32-104" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-105"><a href="#cb32-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-106"><a href="#cb32-106" aria-hidden="true" tabindex="-1"></a>The "icu_ts" plot shows fluctuations similar to "new_deaths_ts" but with less pronounced peaks, suggesting that ICU admissions follow a similar trend as deaths but might not correlate perfectly. The "hosp_ts" plot likely shows the number of hospital patients over time, which, like the ICU data, exhibits waves of increases and decreases. The pattern might follow a similar trend to the ICU and death data, potentially with a lead time as hospital admissions typically precede ICU admissions and deaths.</span>
+<span id="cb32-107"><a href="#cb32-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-108"><a href="#cb32-108" aria-hidden="true" tabindex="-1"></a>The scatterplot between "New_Deaths" and "ICU_Patients" might show a positive correlation, indicated by the clustering of points along an upward trajectory. This suggests that as ICU admissions increase, the number of deaths also increases, which is expected as more severe cases lead to higher mortality. The scatterplot between "ICU_Patients" and "Hospital_Patients" probably shows a strong positive correlation, as a high number of hospital admissions could lead to more patients requiring ICU care.</span>
+<span id="cb32-109"><a href="#cb32-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-110"><a href="#cb32-110" aria-hidden="true" tabindex="-1"></a><span class="fu">### Fitting VAR(p)</span></span>
+<span id="cb32-111"><a href="#cb32-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-112"><a href="#cb32-112" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fit1,message=FALSE, warning=FALSE}</span></span>
+<span id="cb32-113"><a href="#cb32-113" aria-hidden="true" tabindex="-1"></a><span class="fu">VARselect</span>(var_data, <span class="at">lag.max =</span> <span class="dv">10</span>, <span class="at">type =</span> <span class="st">"const"</span>)</span>
+<span id="cb32-114"><a href="#cb32-114" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-115"><a href="#cb32-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-116"><a href="#cb32-116" aria-hidden="true" tabindex="-1"></a>::: panel-tabset</span>
+<span id="cb32-117"><a href="#cb32-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-118"><a href="#cb32-118" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Summary VAR(10)</span></span>
+<span id="cb32-119"><a href="#cb32-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-120"><a href="#cb32-120" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fit1_result1,message=FALSE, warning=FALSE}</span></span>
+<span id="cb32-121"><a href="#cb32-121" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(vars<span class="sc">::</span><span class="fu">VAR</span>(var_data, <span class="at">p=</span><span class="dv">10</span>, <span class="at">type=</span><span class="fu">c</span>(<span class="st">'const'</span>)))</span>
+<span id="cb32-122"><a href="#cb32-122" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-123"><a href="#cb32-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-124"><a href="#cb32-124" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Summary VAR(8)</span></span>
+<span id="cb32-125"><a href="#cb32-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-126"><a href="#cb32-126" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fit1_result2,message=FALSE, warning=FALSE}</span></span>
+<span id="cb32-127"><a href="#cb32-127" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(vars<span class="sc">::</span><span class="fu">VAR</span>(var_data, <span class="at">p=</span><span class="dv">8</span>, <span class="at">type=</span><span class="fu">c</span>(<span class="st">'const'</span>)))</span>
+<span id="cb32-128"><a href="#cb32-128" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-129"><a href="#cb32-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-130"><a href="#cb32-130" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb32-131"><a href="#cb32-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-132"><a href="#cb32-132" aria-hidden="true" tabindex="-1"></a>The log likelihood is higher (closer to zero) for VAR(10) (-15619.034) compared to VAR(8) (-15719.638), suggesting that the VAR(10) model may fit the data better. In both models, many of the lagged values of new_deaths_ts, icu_ts, and hosp_ts are significant predictors of themselves and each other, which suggests that past values have a substantial influence on current values.</span>
+<span id="cb32-133"><a href="#cb32-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-134"><a href="#cb32-134" aria-hidden="true" tabindex="-1"></a>The Multiple R-Squared values are high for both models, indicating a good fit. The Adjusted R-squared is slightly higher for VAR(10) than for VAR(8), which suggests that the additional lags in VAR(10) are providing useful information. The standard errors of the residuals are slightly lower for VAR(10), indicating a better fit to the data.</span>
+<span id="cb32-135"><a href="#cb32-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-136"><a href="#cb32-136" aria-hidden="true" tabindex="-1"></a><span class="fu">### Cross Validation</span></span>
+<span id="cb32-137"><a href="#cb32-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-138"><a href="#cb32-138" aria-hidden="true" tabindex="-1"></a><span class="in">```{r cv1,message=FALSE, warning=FALSE}</span></span>
+<span id="cb32-139"><a href="#cb32-139" aria-hidden="true" tabindex="-1"></a><span class="co"># Selecting relevant columns and handling NAs with interpolation</span></span>
+<span id="cb32-140"><a href="#cb32-140" aria-hidden="true" tabindex="-1"></a>time_series_data <span class="ot">&lt;-</span> <span class="fu">na.approx</span>(filtered_data[, <span class="fu">c</span>(<span class="st">"new_deaths"</span>, <span class="st">"icu_patients"</span>, <span class="st">"hosp_patients"</span>)])</span>
+<span id="cb32-141"><a href="#cb32-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-142"><a href="#cb32-142" aria-hidden="true" tabindex="-1"></a><span class="co"># Split data into training and testing sets (80-20 split)</span></span>
+<span id="cb32-143"><a href="#cb32-143" aria-hidden="true" tabindex="-1"></a>split_ratio <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
+<span id="cb32-144"><a href="#cb32-144" aria-hidden="true" tabindex="-1"></a>split_index <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fu">nrow</span>(time_series_data) <span class="sc">*</span> split_ratio)</span>
+<span id="cb32-145"><a href="#cb32-145" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> <span class="fu">head</span>(time_series_data, split_index)</span>
+<span id="cb32-146"><a href="#cb32-146" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> <span class="fu">tail</span>(time_series_data, <span class="fu">nrow</span>(time_series_data) <span class="sc">-</span> split_index)</span>
+<span id="cb32-147"><a href="#cb32-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-148"><a href="#cb32-148" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize vector to store RMSEs</span></span>
+<span id="cb32-149"><a href="#cb32-149" aria-hidden="true" tabindex="-1"></a>rmse_values <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="dv">10</span>)</span>
+<span id="cb32-150"><a href="#cb32-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-151"><a href="#cb32-151" aria-hidden="true" tabindex="-1"></a><span class="co"># Loop through each lag order (1 to 10)</span></span>
+<span id="cb32-152"><a href="#cb32-152" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) {</span>
+<span id="cb32-153"><a href="#cb32-153" aria-hidden="true" tabindex="-1"></a>  model <span class="ot">&lt;-</span> <span class="fu">VAR</span>(train_data, <span class="at">p =</span> i, <span class="at">type =</span> <span class="st">"const"</span>)</span>
+<span id="cb32-154"><a href="#cb32-154" aria-hidden="true" tabindex="-1"></a>  forecasted <span class="ot">&lt;-</span> <span class="fu">predict</span>(model, <span class="at">n.ahead =</span> <span class="fu">nrow</span>(test_data))</span>
+<span id="cb32-155"><a href="#cb32-155" aria-hidden="true" tabindex="-1"></a>  forecasted_values <span class="ot">&lt;-</span> <span class="fu">sapply</span>(forecasted<span class="sc">$</span>fcst, <span class="cf">function</span>(x) x[,<span class="dv">1</span>])  <span class="co"># Extracts forecasts</span></span>
+<span id="cb32-156"><a href="#cb32-156" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-157"><a href="#cb32-157" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Calculate RMSE and store it</span></span>
+<span id="cb32-158"><a href="#cb32-158" aria-hidden="true" tabindex="-1"></a>  rmse_values[i] <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((test_data <span class="sc">-</span> forecasted_values)<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb32-159"><a href="#cb32-159" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb32-160"><a href="#cb32-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-161"><a href="#cb32-161" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting RMSEs</span></span>
+<span id="cb32-162"><a href="#cb32-162" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, rmse_values, <span class="at">type =</span> <span class="st">"b"</span>, <span class="at">xlab =</span> <span class="st">"Lag Order"</span>, <span class="at">ylab =</span> <span class="st">"RMSE"</span>, <span class="at">main =</span> <span class="st">"RMSE vs Lag Order"</span>)</span>
+<span id="cb32-163"><a href="#cb32-163" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-164"><a href="#cb32-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-165"><a href="#cb32-165" aria-hidden="true" tabindex="-1"></a>Because <span class="in">`VAR(4)`</span> has the lowest RMSE, it indicates that it might generalize better when making predictions, despite not fitting the training data as closely as <span class="in">`VAR(10)`</span>.</span>
+<span id="cb32-166"><a href="#cb32-166" aria-hidden="true" tabindex="-1"></a>My primary goal is forecasting, the model with the lower RMSE might be preferable, as it indicates better predictive performance. Besides, a model with too many lags might overfit the historical data, leading to poorer performance on new data. The lower RMSE of <span class="in">`VAR(4)`</span> could suggest it is less prone to overfitting compared to <span class="in">`VAR(10)`</span>. Therefore, I would pick <span class="in">`VAR(4)`</span> to forecast.</span>
+<span id="cb32-167"><a href="#cb32-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-168"><a href="#cb32-168" aria-hidden="true" tabindex="-1"></a><span class="fu">### Forecasting</span></span>
+<span id="cb32-169"><a href="#cb32-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-170"><a href="#cb32-170" aria-hidden="true" tabindex="-1"></a><span class="in">```{r forecast1, message=FALSE, warning=FALSE}</span></span>
+<span id="cb32-171"><a href="#cb32-171" aria-hidden="true" tabindex="-1"></a>fit1 <span class="ot">&lt;-</span> <span class="fu">VAR</span>(var_data, <span class="at">p =</span><span class="dv">4</span>, <span class="at">type =</span> <span class="st">"const"</span>)</span>
+<span id="cb32-172"><a href="#cb32-172" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(<span class="fu">forecast</span>(fit1, <span class="at">h =</span> <span class="dv">60</span>))<span class="sc">+</span><span class="fu">theme_bw</span>()</span>
+<span id="cb32-173"><a href="#cb32-173" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-174"><a href="#cb32-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-175"><a href="#cb32-175" aria-hidden="true" tabindex="-1"></a><span class="fu">## ARIMAX - Daily New Confirmed Cases in the US, and People Vaccinated</span></span>
+<span id="cb32-176"><a href="#cb32-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-177"><a href="#cb32-177" aria-hidden="true" tabindex="-1"></a><span class="fu">### Exploratory Analysis</span></span>
+<span id="cb32-178"><a href="#cb32-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-179"><a href="#cb32-179" aria-hidden="true" tabindex="-1"></a><span class="in">```{r prepare_data_2,include=FALSE, message=FALSE, warning=FALSE}</span></span>
+<span id="cb32-180"><a href="#cb32-180" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter the data for dates from 2020-07-15 onwards</span></span>
+<span id="cb32-181"><a href="#cb32-181" aria-hidden="true" tabindex="-1"></a>filtered_data <span class="ot">&lt;-</span> owid_covid_data_us <span class="sc">%&gt;%</span> <span class="fu">filter</span>(date <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">"2020-12-13"</span>))</span>
+<span id="cb32-182"><a href="#cb32-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-183"><a href="#cb32-183" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to time series object</span></span>
+<span id="cb32-184"><a href="#cb32-184" aria-hidden="true" tabindex="-1"></a>new_cases_ts <span class="ot">&lt;-</span> <span class="fu">ts</span>(filtered_data<span class="sc">$</span>new_cases, <span class="at">start =</span> <span class="dv">2021</span>, <span class="at">end =</span> <span class="dv">2022</span>, <span class="at">frequency=</span><span class="dv">365</span>)</span>
+<span id="cb32-185"><a href="#cb32-185" aria-hidden="true" tabindex="-1"></a>vacc_ts <span class="ot">&lt;-</span> <span class="fu">ts</span>(filtered_data<span class="sc">$</span>people_vaccinated, <span class="at">start =</span> <span class="dv">2021</span>, <span class="at">end =</span> <span class="dv">2022</span>, <span class="at">frequency=</span><span class="dv">365</span>)</span>
+<span id="cb32-186"><a href="#cb32-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-187"><a href="#cb32-187" aria-hidden="true" tabindex="-1"></a><span class="co"># Create var data by combining three timeseries</span></span>
+<span id="cb32-188"><a href="#cb32-188" aria-hidden="true" tabindex="-1"></a>var_data2 <span class="ot">=</span> <span class="fu">window</span>(<span class="fu">ts.union</span>(new_cases_ts, vacc_ts))</span>
+<span id="cb32-189"><a href="#cb32-189" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-190"><a href="#cb32-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-191"><a href="#cb32-191" aria-hidden="true" tabindex="-1"></a><span class="in">```{r plot3,message=FALSE, warning=FALSE}</span></span>
+<span id="cb32-192"><a href="#cb32-192" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot Timeseries of all 3 variables</span></span>
+<span id="cb32-193"><a href="#cb32-193" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(var_data2, <span class="at">facets =</span> T) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Correlation Time Series Plots"</span>)<span class="sc">+</span><span class="fu">theme_bw</span>()</span>
+<span id="cb32-194"><a href="#cb32-194" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-195"><a href="#cb32-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-196"><a href="#cb32-196" aria-hidden="true" tabindex="-1"></a><span class="fu">### Auto.Arima</span></span>
+<span id="cb32-197"><a href="#cb32-197" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-198"><a href="#cb32-198" aria-hidden="true" tabindex="-1"></a><span class="in">```{r arimax1}</span></span>
+<span id="cb32-199"><a href="#cb32-199" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit ARIMAX model</span></span>
+<span id="cb32-200"><a href="#cb32-200" aria-hidden="true" tabindex="-1"></a>arimax_model <span class="ot">&lt;-</span> <span class="fu">auto.arima</span>(new_cases_ts, <span class="at">xreg =</span> vacc_ts)</span>
+<span id="cb32-201"><a href="#cb32-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-202"><a href="#cb32-202" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(arimax_model)</span>
+<span id="cb32-203"><a href="#cb32-203" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-204"><a href="#cb32-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-205"><a href="#cb32-205" aria-hidden="true" tabindex="-1"></a>The auto.arima function in *R* suggests an <span class="in">`ARIMAX(3,1,2)`</span> model as the best fit for the data.</span>
+<span id="cb32-206"><a href="#cb32-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-207"><a href="#cb32-207" aria-hidden="true" tabindex="-1"></a><span class="fu">### Fitting ARIMAX Model Manually</span></span>
+<span id="cb32-208"><a href="#cb32-208" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-209"><a href="#cb32-209" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fit2}</span></span>
+<span id="cb32-210"><a href="#cb32-210" aria-hidden="true" tabindex="-1"></a>fit.reg <span class="ot">&lt;-</span> <span class="fu">lm</span>(new_cases <span class="sc">~</span> people_vaccinated, <span class="at">data=</span>filtered_data)</span>
+<span id="cb32-211"><a href="#cb32-211" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.reg)</span>
+<span id="cb32-212"><a href="#cb32-212" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-213"><a href="#cb32-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-214"><a href="#cb32-214" aria-hidden="true" tabindex="-1"></a>::: panel-tabset</span>
+<span id="cb32-215"><a href="#cb32-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-216"><a href="#cb32-216" aria-hidden="true" tabindex="-1"></a><span class="fu">#### ACF Plot of Residuals</span></span>
+<span id="cb32-217"><a href="#cb32-217" aria-hidden="true" tabindex="-1"></a><span class="in">```{r acf1}</span></span>
+<span id="cb32-218"><a href="#cb32-218" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(<span class="fu">residuals</span>(fit.reg))</span>
+<span id="cb32-219"><a href="#cb32-219" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-220"><a href="#cb32-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-221"><a href="#cb32-221" aria-hidden="true" tabindex="-1"></a><span class="fu">#### PACF Plot of Residuals</span></span>
+<span id="cb32-222"><a href="#cb32-222" aria-hidden="true" tabindex="-1"></a><span class="in">```{r pacf1}</span></span>
+<span id="cb32-223"><a href="#cb32-223" aria-hidden="true" tabindex="-1"></a><span class="fu">ggPacf</span>(<span class="fu">residuals</span>(fit.reg))</span>
+<span id="cb32-224"><a href="#cb32-224" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-225"><a href="#cb32-225" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-226"><a href="#cb32-226" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb32-227"><a href="#cb32-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-228"><a href="#cb32-228" aria-hidden="true" tabindex="-1"></a>::: panel-tabset</span>
+<span id="cb32-229"><a href="#cb32-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-230"><a href="#cb32-230" aria-hidden="true" tabindex="-1"></a><span class="fu">#### ACF Plot of first-differenced Residuals</span></span>
+<span id="cb32-231"><a href="#cb32-231" aria-hidden="true" tabindex="-1"></a><span class="in">```{r acf2}</span></span>
+<span id="cb32-232"><a href="#cb32-232" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(<span class="fu">residuals</span>(fit.reg) <span class="sc">%&gt;%</span> <span class="fu">diff</span>())</span>
+<span id="cb32-233"><a href="#cb32-233" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-234"><a href="#cb32-234" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-235"><a href="#cb32-235" aria-hidden="true" tabindex="-1"></a><span class="fu">#### PACF Plot of first-differenced Residuals</span></span>
+<span id="cb32-236"><a href="#cb32-236" aria-hidden="true" tabindex="-1"></a><span class="in">```{r pacf2}</span></span>
+<span id="cb32-237"><a href="#cb32-237" aria-hidden="true" tabindex="-1"></a><span class="fu">ggPacf</span>(<span class="fu">residuals</span>(fit.reg) <span class="sc">%&gt;%</span> <span class="fu">diff</span>())</span>
+<span id="cb32-238"><a href="#cb32-238" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-239"><a href="#cb32-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-240"><a href="#cb32-240" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb32-241"><a href="#cb32-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-242"><a href="#cb32-242" aria-hidden="true" tabindex="-1"></a>Finding the model parameters.</span>
+<span id="cb32-243"><a href="#cb32-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-244"><a href="#cb32-244" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fit3}</span></span>
+<span id="cb32-245"><a href="#cb32-245" aria-hidden="true" tabindex="-1"></a>d<span class="ot">=</span><span class="dv">1</span></span>
+<span id="cb32-246"><a href="#cb32-246" aria-hidden="true" tabindex="-1"></a>i<span class="ot">=</span><span class="dv">1</span></span>
+<span id="cb32-247"><a href="#cb32-247" aria-hidden="true" tabindex="-1"></a>temp<span class="ot">=</span> <span class="fu">data.frame</span>()</span>
+<span id="cb32-248"><a href="#cb32-248" aria-hidden="true" tabindex="-1"></a>ls<span class="ot">=</span><span class="fu">matrix</span>(<span class="fu">rep</span>(<span class="cn">NA</span>,<span class="dv">6</span><span class="sc">*</span><span class="dv">12</span>),<span class="at">nrow=</span><span class="dv">12</span>) <span class="co"># roughly nrow = 3x4x1</span></span>
+<span id="cb32-249"><a href="#cb32-249" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-250"><a href="#cb32-250" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-251"><a href="#cb32-251" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (p <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>) <span class="co"># p=0,1,2,3</span></span>
+<span id="cb32-252"><a href="#cb32-252" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb32-253"><a href="#cb32-253" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(q <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) <span class="co"># q=0,1,2</span></span>
+<span id="cb32-254"><a href="#cb32-254" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb32-255"><a href="#cb32-255" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(d <span class="cf">in</span> <span class="dv">1</span>) <span class="co"># d=1</span></span>
+<span id="cb32-256"><a href="#cb32-256" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb32-257"><a href="#cb32-257" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb32-258"><a href="#cb32-258" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(p<span class="dv">-1</span><span class="sc">+</span>d<span class="sc">+</span>q<span class="dv">-1</span><span class="sc">&lt;=</span><span class="dv">8</span>)</span>
+<span id="cb32-259"><a href="#cb32-259" aria-hidden="true" tabindex="-1"></a>      {</span>
+<span id="cb32-260"><a href="#cb32-260" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb32-261"><a href="#cb32-261" aria-hidden="true" tabindex="-1"></a>        model<span class="ot">&lt;-</span> <span class="fu">Arima</span>(new_deaths_ts,<span class="at">order=</span><span class="fu">c</span>(p<span class="dv">-1</span>,d,q<span class="dv">-1</span>)) </span>
+<span id="cb32-262"><a href="#cb32-262" aria-hidden="true" tabindex="-1"></a>        ls[i,]<span class="ot">=</span> <span class="fu">c</span>(p<span class="dv">-1</span>,d,q<span class="dv">-1</span>,model<span class="sc">$</span>aic,model<span class="sc">$</span>bic,model<span class="sc">$</span>aicc)</span>
+<span id="cb32-263"><a href="#cb32-263" aria-hidden="true" tabindex="-1"></a>        i<span class="ot">=</span>i<span class="sc">+</span><span class="dv">1</span></span>
+<span id="cb32-264"><a href="#cb32-264" aria-hidden="true" tabindex="-1"></a>        <span class="co">#print(i)</span></span>
+<span id="cb32-265"><a href="#cb32-265" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb32-266"><a href="#cb32-266" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb32-267"><a href="#cb32-267" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb32-268"><a href="#cb32-268" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb32-269"><a href="#cb32-269" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb32-270"><a href="#cb32-270" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb32-271"><a href="#cb32-271" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-272"><a href="#cb32-272" aria-hidden="true" tabindex="-1"></a>temp<span class="ot">=</span> <span class="fu">as.data.frame</span>(ls)</span>
+<span id="cb32-273"><a href="#cb32-273" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(temp)<span class="ot">=</span> <span class="fu">c</span>(<span class="st">"p"</span>,<span class="st">"d"</span>,<span class="st">"q"</span>,<span class="st">"AIC"</span>,<span class="st">"BIC"</span>,<span class="st">"AICc"</span>)</span>
+<span id="cb32-274"><a href="#cb32-274" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-275"><a href="#cb32-275" aria-hidden="true" tabindex="-1"></a><span class="co">#temp</span></span>
+<span id="cb32-276"><a href="#cb32-276" aria-hidden="true" tabindex="-1"></a>temp <span class="ot">&lt;-</span> temp[<span class="fu">order</span>(temp<span class="sc">$</span>BIC, <span class="at">decreasing =</span> <span class="cn">FALSE</span>),] </span>
+<span id="cb32-277"><a href="#cb32-277" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(temp)</span>
+<span id="cb32-278"><a href="#cb32-278" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-279"><a href="#cb32-279" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-280"><a href="#cb32-280" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fit3_result, message=FALSE, warning=FALSE}</span></span>
+<span id="cb32-281"><a href="#cb32-281" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract lowest AIC</span></span>
+<span id="cb32-282"><a href="#cb32-282" aria-hidden="true" tabindex="-1"></a>temp[<span class="fu">which.min</span>(temp<span class="sc">$</span>AIC),] </span>
+<span id="cb32-283"><a href="#cb32-283" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-284"><a href="#cb32-284" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract lowest BIC</span></span>
+<span id="cb32-285"><a href="#cb32-285" aria-hidden="true" tabindex="-1"></a>temp[<span class="fu">which.min</span>(temp<span class="sc">$</span>BIC),]</span>
+<span id="cb32-286"><a href="#cb32-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-287"><a href="#cb32-287" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract lowest AICc</span></span>
+<span id="cb32-288"><a href="#cb32-288" aria-hidden="true" tabindex="-1"></a>temp[<span class="fu">which.min</span>(temp<span class="sc">$</span>AICc),]</span>
+<span id="cb32-289"><a href="#cb32-289" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-290"><a href="#cb32-290" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-291"><a href="#cb32-291" aria-hidden="true" tabindex="-1"></a>Both give us the same results: <span class="in">`ARIMA(3,1,2)`</span> is the best model.</span>
+<span id="cb32-292"><a href="#cb32-292" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-293"><a href="#cb32-293" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fit4}</span></span>
+<span id="cb32-294"><a href="#cb32-294" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">Arima</span>(new_cases_ts,<span class="at">order=</span><span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">2</span>),<span class="at">xreg=</span>vacc_ts)</span>
+<span id="cb32-295"><a href="#cb32-295" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span>
+<span id="cb32-296"><a href="#cb32-296" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-297"><a href="#cb32-297" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-298"><a href="#cb32-298" aria-hidden="true" tabindex="-1"></a><span class="fu">### Model Diagnostics</span></span>
+<span id="cb32-299"><a href="#cb32-299" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-300"><a href="#cb32-300" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fit4_output}</span></span>
+<span id="cb32-301"><a href="#cb32-301" aria-hidden="true" tabindex="-1"></a><span class="fu">checkresiduals</span>(fit)</span>
+<span id="cb32-302"><a href="#cb32-302" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-303"><a href="#cb32-303" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-304"><a href="#cb32-304" aria-hidden="true" tabindex="-1"></a><span class="fu">### Forecasting</span></span>
+<span id="cb32-305"><a href="#cb32-305" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-306"><a href="#cb32-306" aria-hidden="true" tabindex="-1"></a><span class="in">```{r forecast3}</span></span>
+<span id="cb32-307"><a href="#cb32-307" aria-hidden="true" tabindex="-1"></a>fcast_cases <span class="ot">=</span> <span class="fu">forecast</span>(fit, <span class="at">xreg =</span> vacc_ts, <span class="at">h =</span> <span class="dv">30</span>)</span>
+<span id="cb32-308"><a href="#cb32-308" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(fcast_cases) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">"Date"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"New Cases"</span>)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"Predictions"</span>)</span>
+<span id="cb32-309"><a href="#cb32-309" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-310"><a href="#cb32-310" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-311"><a href="#cb32-311" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+</body></html>

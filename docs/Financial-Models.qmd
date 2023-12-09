@@ -1,0 +1,246 @@
+---
+title: "Financial Time Series Models"
+format:
+  html:
+    page-layout: full
+    code-fold: show
+    code-copy: true
+    code-tools: true
+    code-overflow: wrap
+---
+
+## Summary
+
+In this section, I add an ARCH/GARCH model to the ARIMA model to further fit and predict the daily number of newly confirmed COVID-19 cases and deaths, and try to capture possible clustering of volatility in the data.
+
+## Literature Review
+
+ARCH (Autoregressive Conditional Heteroskedasticity) and GARCH (Generalized Autoregressive Conditional Heteroskedasticity) models are commonly used to model financial time series data where there is volatility clustering—periods of swings followed by periods of relative calm. These models are well-suited to series with non-constant variance (heteroskedasticity), which is often observed in financial markets.
+
+For epidemiological data like daily new COVID-19 cases or deaths, it's possible that similar patterns of volatility could exist. For example, there might be periods of rapid increases or decreases in case numbers due to external factors like new variants, policy changes, or behavioral shifts. If such patterns are present and result in volatility clustering, then using ARCH or GARCH models could be appropriate. In fact, there are many studies using ARCH/GARCH models to predict COVID-19:
+
+Ekinci (2021) utilized ARMA-GARCH models to forecast the daily growth rate of new COVID-19 cases in nine heavily affected countries, highlighting the models' superior performance over traditional ARMA models due to their ability to capture conditional heteroskedasticity and heavy-tailed distributions (Ekinci, 2021).
+
+In the context of the United Arab Emirates, a study deployed seasonal autoregressive moving average and ARCH models to forecast COVID-19 spread, underscoring the significance of advanced modeling techniques in pandemic management (Kamalov F, Thabtah F., 2021).
+
+Lastly, a South African study by Mthethwa N et al. (2022) employed Markov-switching GARCH-type models with heavy-tailed distributions, focusing on estimating the minimum daily death toll from COVID-19. This research emphasized the similarity between the volatility clustering in COVID-19 death data and financial returns (Mthethwa N, Chifurira R, Chinhamu K., 2022).
+
+## ARIMA+GARCH Modeling of Daily New Confirmed Cases in the US
+
+### Fitting ARIMA
+
+According to previous analysis, `ARIMA(3,1,4)` is the best fit model for Daily New Confirmed Cases in the US.
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+library(readxl)
+library(plotly)
+library(dplyr)
+library(zoo)
+library(ggplot2)
+library(forecast)
+library(tseries)
+library(astsa)
+library(fpp2)
+library(fGarch)
+library(rugarch)
+#options(repos = c(CRAN = "https://cloud.r-project.org"))
+#install.packages("FinTS")
+library(FinTS)
+```
+
+```{r load, include=FALSE, message=FALSE, warning=FALSE}
+owid_covid_data_us <- readxl::read_xlsx("../data/owid_covid_data_us.xlsx")
+```
+
+```{r prepare_for_plot,include=FALSE, message=FALSE, warning=FALSE}
+# Convert the 'date' column as date
+owid_covid_data_us$date <- as.Date(owid_covid_data_us$date)
+
+# Filter data for dates before 2022-10-20
+owid_covid_data_us <- owid_covid_data_us %>% filter(date < as.Date("2022-10-20"))
+
+# Convert to time series object
+new_cases_ts <- ts(owid_covid_data_us$new_cases, start = c(2020, 1, 3), end = c(2022, 10, 20), frequency=365)
+new_deaths_ts <- ts(owid_covid_data_us$new_deaths, start = c(2020, 1, 3), end = c(2022, 10, 20), frequency=365)
+
+# Handle NAs with interpolation 
+new_deaths_ts <- na.interp(new_deaths_ts)
+```
+
+```{r res1, message=FALSE, warning=FALSE}
+# Fit chosen ARIMA model
+fit1 <- Arima(new_cases_ts, order=c(3,1,4))
+
+# Extract resids and its square
+resids1 <- fit1$residuals
+square_resids1 <- resids1^2
+```
+
+### Determining Need for Additional Model
+
+::: panel-tabset
+
+#### ACF Plot
+```{r plot1, message=FALSE, warning=FALSE}
+# Plot ACF
+ggAcf(square_resids1, 48, main="ACF for Squared Residuals")
+```
+
+#### PACF Plot
+
+```{r plot2, message=FALSE, warning=FALSE}
+# Plot PACF
+ggPacf(square_resids1, 48, main="PACF for Squared Residuals")
+```
+
+#### Arch test
+
+```{r test1, message=FALSE, warning=FALSE}
+ArchTest(resids1)
+```
+
+:::
+
+I observe significant spikes in the ACF of squared residuals that are outside the confidence bands, and these spikes taper off as the lags increase, this would suggest volatility clustering and potential ARCH effects. The PACF plot also shows significant spikes at the first few lags, it suggests that a GARCH model is more appropriate than an ARCH model.
+
+The result of Arch Test indicates that there is very strong evidence of ARCH effects in the time series residuals. This means that the volatility of the time series data is clustering, and the variance of the residuals is not constant over time but rather depends on the past values of the squared residuals. This further proves my conclusion before.
+
+Given this result, an ARCH or GARCH model may be appropriate to model the time-varying volatility in the data. These models are capable of capturing the observed volatility clustering in time series data, which standard ARIMA models cannot do.
+
+### Fitting Garch(p,q) to residuals
+
+```{r fit1, message=FALSE, warning=FALSE}
+model <- list() ## set counter
+cc <- 1
+for (p in 1:3) {
+  for (q in 1:7) {
+  
+model[[cc]] <- garch(resids1,order=c(q,p),trace=F)
+cc <- cc + 1
+}
+} 
+
+## get AIC values for model evaluation
+GARCH_AIC <- sapply(model, AIC) 
+
+model[[which(GARCH_AIC == min(GARCH_AIC))]] ## model with lowest AIC is the best and output model summary
+```
+
+Although `GARCH(3,7)` seems to have a smaller AIC, the model is obviously overfitted and leads to numerical instability, which is not the result I want. Therefore, consider a more parsimonious model (fewer parameters) that may perform better.
+```{r fit1_result, message=FALSE, warning=FALSE}
+summary(garchFit(~garch(2,1), resids1, trace = F)) 
+```
+
+The `GARCH(2,1)` model results show a simpler model compared to the previously attempted `GARCH(3,7)` model.
+
+The result indicates that: The mu coefficient is again not significant, suggesting that the mean of the residuals is not significantly different from zero. The omega coefficient has a very large standard error, indicating instability or issues with the estimation of this parameter. The alpha1 and alpha2 coefficients are significant, suggesting that past squared residuals are important in predicting current volatility. The beta1 coefficient is also significant, implying that past conditional variances are predictive of current conditional variance.
+
+The Ljung-Box test for the residuals (R) shows significant autocorrelation, suggesting that the model might not be fully capturing the temporal structure in the data. The Ljung-Box test for the squared residuals (R^2) and the LM Arch Test show no significant autocorrelation, indicating that the GARCH model is successfully modeling volatility clustering.
+
+Overall, while the `GARCH(2,1)` model has some issues with the estimation of the omega coefficient, it seems to be a better fit than the more complex models. However, the significant autocorrelation in the residuals suggests that further refinement of the model may be necessary, for example, consider using TGARCH or EGARCH models, but I won't go into further analysis here.
+
+The equation for the model:
+
+\begin{equation}
+    \Delta y_t = 1005.1702 + 0.5033 \Delta y_{t-1} - 0.4148 \Delta y_{t-2} + 0.6132 \Delta y_{t-3} - 0.8180 \epsilon_{t-1} + 0.0383 \epsilon_{t-2} - 0.6115 \epsilon_{t-3} + 0.6630 \epsilon_{t-4} + \epsilon_t
+\end{equation}
+
+\begin{equation}
+    \epsilon_t = \sigma_t z_t
+\end{equation}
+
+\begin{equation}
+    \sigma_t^2 = 837.76265 + 0.83000 \epsilon_{t-1}^2 + 1.00000 \epsilon_{t-2}^2 + 0.34548 \sigma_{t-1}^2
+\end{equation}
+
+## ARIMA+GARCH Modeling of Daily New Confirmed Deaths in the US
+
+### Fitting ARIMA
+
+According to previous analysis, `ARIMA(5,1,2)` is the best fit model for Daily New Confirmed Deaths in the US.
+
+```{r res2, message=FALSE, warning=FALSE}
+# Fit chosen ARIMA model
+fit2 <- Arima(new_deaths_ts, order=c(5,1,2))
+
+# Extract resids and its square
+resids2 <- fit2$residuals
+square_resids2 <- resids2^2
+```
+
+### Determining Need for Additional Model
+
+::: panel-tabset
+
+#### ACF Plot
+```{r plot3, message=FALSE, warning=FALSE}
+# Plot ACF
+ggAcf(square_resids2, 48, main="ACF for Squared Residuals")
+```
+
+#### PACF Plot
+
+```{r plot4, message=FALSE, warning=FALSE}
+# Plot PACF
+ggPacf(square_resids2, 48, main="PACF for Squared Residuals")
+```
+
+#### Arch test
+
+```{r test2, message=FALSE, warning=FALSE}
+ArchTest(resids2)
+```
+
+:::
+
+Combining the visual evidence from the ACF and PACF plots with the statistical evidence from the ARCH LM test, it is clear that there are ARCH effects present in the residuals.
+
+### Fitting Garch(p,q) to residuals
+
+```{r fit2, message=FALSE, warning=FALSE}
+model <- list() ## set counter
+cc <- 1
+for (p in 1:1) {
+  for (q in 1:1) {
+  
+model[[cc]] <- garch(resids2,order=c(q,p),trace=F)
+cc <- cc + 1
+}
+} 
+
+## get AIC values for model evaluation
+GARCH_AIC <- sapply(model, AIC) 
+
+model[[which(GARCH_AIC == min(GARCH_AIC))]] ## model with lowest AIC is the best and output model summary
+```
+
+```{r fit2_result, message=FALSE, warning=FALSE}
+summary(garchFit(~garch(1,1), resids2, trace = F)) 
+```
+
+The output provided from the `GARCH(1,1)` modeling procedure includes several important components that give us insights into the fitted model's performance:
+
+The mu coefficient is not significant with a p-value of 0.719, implying that the conditional mean is not different from zero. The omega coefficient has a problem as its standard error is not available (NaN). This could be a result of numerical issues during optimization or model misspecification. The alpha1 coefficient is at the boundary of the parameter space, being exactly 1. This could indicate a model at the edge of stationarity or nonstationarity in variance, and this could be a sign of the Integrated GARCH (IGARCH) effect, where shocks have a persistent effect on volatility. The beta1 coefficient is significant and less than one, suggesting that past conditional variances do have an impact on current variance, but the effect is not indefinitely persistent.
+
+The Ljung-Box tests on the residuals R show significant autocorrelations at various lags, suggesting that the `GARCH(1,1)` model may not be adequately capturing all the dependencies in the data. The Ljung-Box tests on the squared residuals R^2 and the LM Arch Test do not show significant results (p-value ~ 1), indicating no autocorrelation in the squared residuals. This suggests that the `GARCH(1,1)` model is capturing the volatility clustering in the data.
+
+Given the output, while the `GARCH(1,1)` model captures the volatility clustering (as indicated by the non-significant Ljung-Box tests on squared residuals), the issue with omega needs to be addressed. The significance of alpha1 and beta1 suggests that the model is capturing the dynamics of volatility, but the perfect boundary value of 1 for alpha1 could be problematic, indicating that the model might better be specified as an IGARCH model. Additionally, the significant autocorrelations in the residuals suggest that the mean model might need to be expanded or that there are other forms of temporal dependencies not captured by the current model.
+
+The equation for the model:
+
+\begin{equation}
+    \Delta y_t = 2.4559 + 0.5145 \Delta y_{t-1} - 0.7522 \Delta y_{t-2} - 0.1719 \Delta y_{t-3} - 0.3084 \Delta y_{t-4} - 0.2779 \Delta y_{t-5} - 1.0594 \epsilon_{t-1} + 0.7524 \epsilon_{t-2} + \epsilon_t
+\end{equation}
+
+\begin{equation}
+    \epsilon_t = \sigma_t z_t
+\end{equation}
+
+\begin{equation}
+    \sigma_t^2 = 0.094282 + 1.000000 \epsilon_{t-1}^2 + 0.587135 \sigma_{t-1}^2
+\end{equation}
+
+
+
+
+

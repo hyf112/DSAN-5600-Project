@@ -1,0 +1,382 @@
+---
+title: "ARMA/ARIMA/SARIMA Models"
+format:
+  html:
+    page-layout: full
+    code-fold: show
+    code-copy: true
+    code-tools: true
+    code-overflow: wrap
+#bibliography: bibliography.bib
+---
+
+## Summary
+
+In this section, I start trying to fit and forecast Daily New Confirmed COVID-19 Cases and Deaths by using some basic time-series models, including the ARMA (Autoregressive Moving Average) model or its variants, ARIMA (Autoregressive Integrated Moving Average) and SARIMA (Seasonal Autoregressive Integrated Moving Average).
+
+## ARIMA Modeling of Daily New Confirmed Cases in the US
+
+### Check Stationarity of first-differenced New Cases
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+library(readxl)
+library(plotly)
+library(dplyr)
+library(zoo)
+library(ggplot2)
+library(forecast)
+library(tseries)
+library(astsa)
+library(fpp2)
+```
+
+```{r load, include=FALSE, message=FALSE, warning=FALSE}
+owid_covid_data_us <- readxl::read_xlsx("../data/owid_covid_data_us.xlsx")
+```
+
+```{r prepare_for_plot,include=FALSE, message=FALSE, warning=FALSE}
+# Convert the 'date' column as date
+owid_covid_data_us$date <- as.Date(owid_covid_data_us$date)
+
+# Filter data for dates before 2022-10-20
+owid_covid_data_us <- owid_covid_data_us %>% filter(date < as.Date("2022-10-20"))
+
+# Convert to time series object
+new_cases_ts <- ts(owid_covid_data_us$new_cases, start = c(2020, 1, 3), end = c(2022, 10, 20), frequency=365)
+new_deaths_ts <- ts(owid_covid_data_us$new_deaths, start = c(2020, 1, 3), end = c(2022, 10, 20), frequency=365)
+
+# Handle NAs with interpolation 
+new_deaths_ts <- na.interp(new_deaths_ts)
+```
+
+```{r 1st_diff, include=FALSE, message=FALSE, warning=FALSE}
+# 1st diff
+new_cases_ts_diff <- diff(new_cases_ts)
+new_deaths_ts_diff <- diff(new_deaths_ts)
+```
+
+::: panel-tabset
+
+#### ACF Plot
+```{r plot1, message=FALSE, warning=FALSE}
+# Plot ACF
+ggAcf(new_cases_ts_diff, 48, main="ACF for 1st-Differenced Daily New COVID-19 Cases")
+```
+
+#### PACF Plot
+
+```{r plot2, message=FALSE, warning=FALSE}
+# Plot PACF
+ggPacf(new_cases_ts_diff, 48, main="PACF for 1st-Differenced Daily New COVID-19 Cases")
+```
+
+#### ADF test
+
+```{r, test1, message=FALSE, warning=FALSE}
+adf.test(new_cases_ts_diff)
+```
+
+:::
+
+It seems that the time series is not stationary, and it needs further differencing.
+
+### Check Stationarity of second-differenced New Cases
+```{r 2nd_diff, include=FALSE, message=FALSE, warning=FALSE}
+# 2nd diff
+new_cases_ts_diff2 <- diff(new_cases_ts_diff)
+new_deaths_ts_diff2 <- diff(new_deaths_ts_diff)
+```
+
+::: panel-tabset
+
+#### ACF Plot
+```{r plot1_1, message=FALSE, warning=FALSE}
+# Plot ACF
+ggAcf(new_cases_ts_diff2, 48, main="ACF for 2nd-Differenced Daily New COVID-19 Cases")
+```
+
+#### PACF Plot
+
+```{r plot2_1, message=FALSE, warning=FALSE}
+# Plot PACF
+ggPacf(new_cases_ts_diff2, 48, main="PACF for 2nd-Differenced Daily New COVID-19 Cases")
+```
+
+#### ADF test
+
+```{r, test1_1, message=FALSE, warning=FALSE}
+adf.test(new_cases_ts_diff2)
+```
+
+:::
+
+ACF and PACF Plot prove that the time series has basically achieved stationarity, and ADF Test further proves this conclusion.
+
+### Fitting ARIMA(p,d,q)
+
+```{r fit1, message=FALSE, warning=FALSE}
+d=1
+i=1
+temp= data.frame()
+ls=matrix(rep(NA,6*24),nrow=24) # roughly nrow = 3x4x2
+
+
+for (p in 1:4) # p=0,1,2,3
+{
+  for(q in 1:3) # q=0,1,2
+  {
+    for(d in 1:2) # d=1,2
+    {
+      
+      if(p-1+d+q-1<=8)
+      {
+        
+        model<- Arima(new_cases_ts,order=c(p-1,d,q-1)) 
+        ls[i,]= c(p-1,d,q-1,model$aic,model$bic,model$aicc)
+        i=i+1
+        #print(i)
+        
+      }
+      
+    }
+  }
+}
+
+temp= as.data.frame(ls)
+names(temp)= c("p","d","q","AIC","BIC","AICc")
+
+#temp
+temp <- temp[order(temp$BIC, decreasing = FALSE),] 
+knitr::kable(temp)
+```
+
+```{r fit1_result, message=FALSE, warning=FALSE}
+# Extract lowest AIC
+temp[which.min(temp$AIC),] 
+
+# Extract lowest BIC
+temp[which.min(temp$BIC),]
+
+# Extract lowest AICc
+temp[which.min(temp$AICc),]
+```
+
+Based on the results, the `ARIMA(2,2,2)` is the best model.
+
+### Auto.Arima
+```{r auto_arima1, message=FALSE, warning=FALSE}
+auto.arima(new_cases_ts)
+```
+
+The auto.arima function in *R* suggests an `ARIMA(3,1,4)` model as the best fit for the data. Since there are different models to choose from, it is important to perform model diagnostics to determine the best model for the data.
+
+### Model Diagnostic
+
+::: panel-tabset
+
+#### ARIMA(2,2,2) Plot
+```{r output1_plot, message=FALSE, warning=FALSE}
+model_output1 <- capture.output(sarima(new_cases_ts,2,2,2))
+```
+
+#### ARIMA(2,2,2)
+```{r output1, message=FALSE, warning=FALSE}
+cat(model_output1[45:76], model_output1[length(model_output1)], sep = "\n") 
+```
+
+#### ARIMA(3,1,4) Plot
+
+```{r output2_plot, message=FALSE, warning=FALSE}
+model_output2 <- capture.output(sarima(new_cases_ts,3,1,4))
+```
+
+#### ARIMA(3,1,4)
+
+```{r output2, message=FALSE, warning=FALSE}
+cat(model_output2[47:83], model_output2[length(model_output2)], sep = "\n") 
+```
+
+:::
+
+Both models show residuals that seem to have no trend, which is good. Both models' ACF plots with most spikes within the confidence bounds, suggesting the residuals do not exhibit autocorrelation. The plots indicate that the residuals from both models do not perfectly follow a normal distribution, especially in the tails. However, this deviation is quite common in practice. The p-values for both models seem to be above the 0.05 threshold, suggesting that the residuals are white noise.
+
+Considering all the diagnostics, the `ARIMA(3,1,4)` model has slightly better AIC values, which might make it preferable.
+
+The equation for the model:
+
+\begin{equation}
+\Delta X_t = c + 0.5033 \Delta X_{t-1} - 0.4148 \Delta X_{t-2} + 0.6132 \Delta X_{t-3} - 0.8180 \varepsilon_{t-1} + 0.0383 \varepsilon_{t-2} - 0.6115 \varepsilon_{t-3} + 0.6630 \varepsilon_{t-4} + \varepsilon_t
+\end{equation}
+
+### Forecasting
+```{r forecast1, message=FALSE, warning=FALSE}
+sarima.for(new_cases_ts, 60, 3,1,4, main='Daily New Confirmed Cases in the US Prediction')
+```
+
+The `ARIMA(3,1,4)` model seems to predict a trend of stable or slightly increasing cases in the immediate future. The actual data shows considerable variability, with what appears to be periodic spikes. It doesn't appear that the model has captured these periodic spikes in the forecast, possibly because these fluctuations may not be predictable using past data alone or may require a more complex seasonal model.
+
+### Comparing Benchmark Methods
+
+```{r compare1, message=FALSE, warning=FALSE}
+fit1 <- Arima(new_cases_ts, order=c(3,1,4))
+autoplot(new_cases_ts) +
+  autolayer(meanf(new_cases_ts, h=60), series="Mean", PI=FALSE) +
+  autolayer(naive(new_cases_ts, h=60), series="Naïve", PI=FALSE) +
+  autolayer(snaive(new_cases_ts, h=60), series="SNaïve", PI=FALSE) +
+  autolayer(rwf(new_cases_ts, h=60, drift=TRUE), series="Drift", PI=FALSE) +
+  autolayer(forecast(fit1,60), series="ARIMA(3,1,4)", PI=FALSE) +
+  ggtitle("Forecasting ARIMA(3,1,4) and Benchmark Methods")
+```
+
+From the graph, only the predictions of the SNaïve baseline method appear to be more reasonable compared to the predictions of the `ARIMA(3,1,4)` model. Forecasts generated from the SNaïve benchmark have the greatest fluctuations or seasonality in the larger range of new cases. However, these indicators paint a volatile downward trend in the number of new cases. The `ARIMA(3,1,4)` model predicts that the number of new cases will first decrease and then stabilize. For shorter forecast horizons, SNaïve models may perform better than ARIMA models, while for longer forecast horizons, ARIMA models may perform better. This is because the SNaïve model assumes that the future values of the time series will be the same as the past values at the same time of year, which may be a reasonable assumption for shorter forecast horizons, but not for longer forecast horizons.
+
+## ARIMA Modeling of Daily New Confirmed Deaths in the US
+
+### Check Stationarity of first-differenced New Deaths
+
+::: panel-tabset
+
+#### ACF Plot
+```{r plot3, message=FALSE, warning=FALSE}
+# Plot ACF
+ggAcf(new_deaths_ts_diff, lag = 48, main="ACF for 1st-Differenced Daily New COVID-19 Deaths")
+```
+
+#### PACF Plot
+
+```{r plot4, message=FALSE, warning=FALSE}
+# Plot PACF
+ggPacf(new_deaths_ts_diff, lag = 48, main="PACF for 1st-Differenced Daily New COVID-19 Deaths")
+```
+
+#### ADF test
+
+```{r, test2, message=FALSE, warning=FALSE}
+adf.test(new_deaths_ts_diff)
+```
+
+:::
+
+ACF and PACF Plot prove that the time series is almost stationary, and ADF Test further proves this conclusion.
+
+### Fitting ARIMA(p,d,q)
+
+```{r fit2, message=FALSE, warning=FALSE}
+d=1
+i=1
+temp= data.frame()
+ls=matrix(rep(NA,6*32),nrow=32) # roughly nrow = 5x6x1
+
+
+for (p in 1:7) # p=0,1,2,3,4,5,6
+{
+  for(q in 1:6) # q=0,1,2,3,4,5
+  {
+    for(d in 1) # d=1
+    {
+      
+      if(p-1+d+q-1<=8)
+      {
+        
+        model<- Arima(new_deaths_ts,order=c(p-1,d,q-1)) 
+        ls[i,]= c(p-1,d,q-1,model$aic,model$bic,model$aicc)
+        i=i+1
+        #print(i)
+        
+      }
+      
+    }
+  }
+}
+
+temp= as.data.frame(ls)
+names(temp)= c("p","d","q","AIC","BIC","AICc")
+
+#temp
+temp <- temp[order(temp$BIC, decreasing = FALSE),] 
+knitr::kable(temp)
+```
+
+```{r fit2_result, message=FALSE, warning=FALSE}
+# Extract lowest AIC
+temp[which.min(temp$AIC),] 
+
+# Extract lowest BIC
+temp[which.min(temp$BIC),]
+
+# Extract lowest AICc
+temp[which.min(temp$AICc),]
+```
+
+Based on the results, the `ARIMA(5,1,2)` is the best model.
+
+### Auto.Arima
+```{r auto_arima2, message=FALSE, warning=FALSE}
+auto.arima(new_deaths_ts)
+```
+
+The auto.arima function in *R* suggests an `ARIMA(3,1,2)` model as the best fit for the data. Since there are different models to choose from, it is important to perform model diagnostics to determine the best model for the data.
+
+### Model Diagnostic
+
+::: panel-tabset
+
+#### ARIMA(5,1,2) Plot
+```{r output3_plot, message=FALSE, warning=FALSE}
+model_output3 <- capture.output(sarima(new_deaths_ts,5,1,2))
+```
+
+#### ARIMA(5,1,2)
+```{r output3, message=FALSE, warning=FALSE}
+cat(model_output3[51:86], model_output3[length(model_output3)], sep = "\n") 
+```
+
+#### ARIMA(3,1,2) Plot
+
+```{r output4_plot, message=FALSE, warning=FALSE}
+model_output4 <- capture.output(sarima(new_deaths_ts,3,1,2))
+```
+
+#### ARIMA(3,1,2)
+
+```{r output4, message=FALSE, warning=FALSE}
+cat(model_output4[62:95], model_output4[length(model_output4)], sep = "\n") 
+```
+
+:::
+
+Both models seem to produce residuals that do not show any obvious patterns or trends. The ACF plots for both models show that most of the autocorrelations for the residuals are within the confidence bounds, indicating that there is no significant autocorrelation left in the residuals. The Q-Q plots for both models indicate that the residuals are not perfectly normally distributed, as the points in the tails do not lie on the line. The p-value plots for both models show that the p-values are generally above the significance level (e.g., 0.05), suggesting that there is no significant autocorrelation in the residuals at various lags. The `ARIMA(5,1,2)` model has slightly lower values of AICc and BIC compared to the `ARIMA(3,1,2)`, suggesting it may be a better model in terms of information criteria.
+
+Based on this comparison, the `ARIMA(5,1,2)` model has a slight edge due to its lower information criteria values, indicating a better fit. 
+
+The equation for the model:
+
+\begin{equation}
+\Delta X_t = 2.4559 + 0.5145 \Delta X_{t-1} - 0.7522 \Delta X_{t-2} - 0.1719 \Delta X_{t-3} - 0.3084 \Delta X_{t-4} - 0.2779 \Delta X_{t-5} - 1.0594 \varepsilon_{t-1} + 0.7524 \varepsilon_{t-2} + \varepsilon_t
+\end{equation}
+
+### Forecasting
+```{r forecast2, message=FALSE, warning=FALSE}
+sarima.for(new_deaths_ts, 60, 5,1,2, main='Daily New Confirmed Deaths in the US Prediction')
+```
+
+The forecast shows a volatile trend with a lot of ups and downs, which suggests that the model expects the number of deaths to continue fluctuating rather than settling into a steady trend. The forecast seems to suggest a repeating pattern or cyclical behavior in the near future. This could imply that the model has detected some seasonal patterns in the historical data, or it may be a sign that the model is overfitting to It's crucial to consider external factors that could affect the actual outcomes, such as new variants of the virus, changes in public health policy, vaccine distribution, and public behavior. These factors are not accounted for in the model but can significantly influence the actual number of deaths.
+
+### Comparing Benchmark Methods
+
+```{r compare2, message=FALSE, warning=FALSE}
+fit2 <- Arima(new_deaths_ts, order=c(5,1,2))
+autoplot(new_deaths_ts) +
+  autolayer(meanf(new_deaths_ts, h=60), series="Mean", PI=FALSE) +
+  autolayer(naive(new_deaths_ts, h=60), series="Naïve", PI=FALSE) +
+  autolayer(snaive(new_deaths_ts, h=60), series="SNaïve", PI=FALSE) +
+  autolayer(rwf(new_deaths_ts, h=60, drift=TRUE), series="Drift", PI=FALSE) +
+  autolayer(forecast(fit2,60), series="ARIMA(5,1,2)", PI=FALSE) +
+  ggtitle("Forecasting ARIMA(5,1,2) and Benchmark Methods")
+```
+
+Similar to the previous analysis, only the predictions of the SNaïve benchmark method appear to be more reasonable compared to the predictions of the ARIMA(5,1,2) model. The ARIMA(5,1,2) model predicts that the number of new deaths will fluctuate within a certain range. And forecasts generated from the SNaïve benchmark show even stronger volatility or seasonality. Overall, these forecasts reveal a strong cyclicality in new deaths.
+
+## SARIMA Modeling of Daily New Confirmed Cases/Deaths in the US
+
+In the previous analysis, the ACF plots of daily new COVID-19 cases and deaths did not exhibit clear cyclical patterns. This suggests that using the SARIMA model may not be a suitable choice.
