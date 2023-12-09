@@ -1,0 +1,45 @@
+---
+title: "Conclusion"
+format:
+  html:
+    page-layout: full
+    code-fold: show
+    code-copy: true
+    code-tools: true
+    code-overflow: wrap
+---
+
+This research illuminates the inherent complexities and erratic nature of daily COVID-19 data, which, while being a rich resource for researchers, also poses numerous challenges and pitfalls in time series analysis. The study underscores the vast regional disparities in infection and mortality rates and the volatility in these figures, which highlight the limitations of current reporting and testing mechanisms, as well as the multitude of underlying trends and factors.
+
+The application of ARMA/ARIMA models has proven potent, offering explanations for varying patterns in case and death numbers and aiding in short-term trend forecasting. This investigation also delved into more advanced models, like ARCH/GARCH, which, despite some fitting and predictive challenges, prompt further examination using more sophisticated techniques. Conversely, certain models exhibited promising predictive accuracy and stability, spurring continued refinement and application for forecasting COVID-19 trends and potentially other infectious diseases.
+
+Additionally, the study explored the impact of vaccinations on new case numbers, indicating a mitigating effect on case growth. It also revealed a strong correlation between ICU admissions and new deaths, highlighting the critical role of medical resource allocation.
+
+Nevertheless, constraints in technology and time precluded the exploration of other influential factors, such as climate and policy measures. The performance of some models requires further optimization. This research is a stepping stone, with the aspiration that future investigations will address these gaps and build upon the findings presented here.
+
+COVID-19 has wrought considerable havoc, disrupting our daily lives and leading to the loss of many. However, I am confident that through collective human effort, we will ultimately prevail over this pandemic and emerge better prepared for any future global health crises.
+
+![We Will Win!](pictures/victory.jpg)
+
+
+
+## Reference
+
+Ekinci A. Modelling and forecasting of growth rate of new COVID-19 cases in top nine affected countries: Considering conditional variance and asymmetric effect. Chaos Solitons Fractals. 2021 Oct;151:111227. doi: 10.1016/j.chaos.2021.111227. Epub 2021 Jul 8. PMID: 34253942; PMCID: PMC8264537. https://pubmed.ncbi.nlm.nih.gov/34253942/
+
+Kamalov F, Thabtah F. Forecasting Covid-19: SARMA-ARCH approach. Health Technol (Berl). 2021;11(5):1139-1148. doi: 10.1007/s12553-021-00587-x. Epub 2021 Aug 18. PMID: 34422542; PMCID: PMC8370786. https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8370786/
+
+Mthethwa N, Chifurira R, Chinhamu K. Estimating the risk of SARS-CoV-2 deaths using a Markov switching-volatility model combined with heavy-tailed distributions for South Africa. BMC Public Health. 2022 Oct 7;22(1):1873. doi: 10.1186/s12889-022-14249-8. PMID: 36207700; PMCID: PMC9540091. https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9540091/
+
+Abate SM, Ahmed Ali S, Mantfardo B, Basu B. Rate of Intensive Care Unit admission and outcomes among patients with coronavirus: A systematic review and Meta-analysis. PLoS One. 2020 Jul 10;15(7):e0235653. doi: 10.1371/journal.pone.0235653. PMID: 32649661; PMCID: PMC7351172. https://pubmed.ncbi.nlm.nih.gov/32649661/
+
+Lavrentieva A, Kaimakamis E, Voutsas V, Bitzani M. An observational study on factors associated with ICU mortality in Covid-19 patients and critical review of the literature. Sci Rep. 2023 May 13;13(1):7804. doi: 10.1038/s41598-023-34613-x. PMID: 37179397; PMCID: PMC10182846. https://pubmed.ncbi.nlm.nih.gov/37179397/
+
+Kowsar R, Rahimi AM, Sroka M, Mansouri A, Sadeghi K, Bonakdar E, Kateb SF, Mahdavi AH. Risk of mortality in COVID-19 patients: a meta- and network analysis. Sci Rep. 2023 Feb 6;13(1):2138. doi: 10.1038/s41598-023-29364-8. PMID: 36747045; PMCID: PMC9901837. https://pubmed.ncbi.nlm.nih.gov/36747045/
+
+Li Z, Liu X, Liu M, Wu Z, Liu Y, Li W, Liu M, Wang X, Gao B, Luo Y, Li X, Tao L, Wang W, Guo X. The Effect of the COVID-19 Vaccine on Daily Cases and Deaths Based on Global Vaccine Data. Vaccines (Basel). 2021 Nov 15;9(11):1328. doi: 10.3390/vaccines9111328. PMID: 34835259; PMCID: PMC8622191. https://pubmed.ncbi.nlm.nih.gov/34835259/
+
+Chen, X., Huang, H., Ju, J. et al. Impact of vaccination on the COVID-19 pandemic in U.S. states. Sci Rep 12, 1554 (2022). https://doi.org/10.1038/s41598-022-05498-z
+Huang C, Yang L, Pan J, Xu X, Peng R. Correlation between vaccine coverage and the COVID-19 pandemic throughout the world: Based on real-world data. J Med Virol. 2022 May;94(5):2181-2187. doi: 10.1002/jmv.27609. Epub 2022 Feb 4. PMID: 35075651; PMCID: PMC9015592. https://pubmed.ncbi.nlm.nih.gov/35075651/
+
+Moore, S., Hill, E.M., Dyson, L. et al. Retrospectively modeling the effects of increased global vaccine sharing on the COVID-19 pandemic. Nat Med 28, 2416–2423 (2022). https://doi.org/10.1038/s41591-022-02064-y

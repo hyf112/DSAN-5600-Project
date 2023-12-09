@@ -1,0 +1,312 @@
+---
+title: "ARIMAX/SARIMAX/VAR Models"
+format:
+  html:
+    page-layout: full
+    code-fold: show
+    code-copy: true
+    code-tools: true
+    code-overflow: wrap
+#bibliography: bibliography.bib
+---
+
+## Summary
+
+In this section, I will use the VAR model to examine the relationship between the daily number of newly confirmed COVID-19 deaths and the number of ICU patients and the number of hospital patients, and use the ARIMAX model to examine the relationship between the daily number of newly confirmed COVID-19 cases and the number of vaccinated people. relationships and try to create effective predictive models.
+
+## Literature review
+
+I synthesizes findings from three critical studies that investigate the rate of Intensive Care Unit (ICU) admissions and outcomes among patients with coronavirus, as well as factors associated with ICU mortality in COVID-19 patients:
+
+Abate, et al (2020) did a systematic review and meta-analysis aimed to understand the rate of Intensive Care Unit (ICU) admissions and outcomes among coronavirus patients. Their study synthesized data from various observational studies to provide a global perspective on the critical care aspects of COVID-19. It emphasized the variability in ICU admission rates and highlighted the significant factors influencing patient outcomes in ICUs, such as healthcare system capabilities, patient demographics, and infection severity (Abate, S. M., Ahmed Ali, S., Mantfardo, B., & Basu, B., 2020). 
+
+Lavrentieva, A., et al (2023) conducted an observational study, with a critical review of the literature to identify factors associated with ICU mortality in COVID-19 patients. Through analyzing patient data, the research identified key predictors of mortality within ICU environments, such as comorbidities, age, and treatment modalities. The study's findings provide valuable insights for healthcare practitioners in understanding and predicting the risk factors for mortality among critically ill COVID-19 patients (Lavrentieva, A., Kaimakamis, E., Voutsas, V., & Bitzani, M., 2023).
+
+Kowsar, R., et al (2023), their article presents a meta- and network analysis to assess the risk of mortality in COVID-19 patients. Combining data from various sources, the study offers a comprehensive view of the factors contributing to patient outcomes during the pandemic. It highlights the complexity of managing COVID-19, particularly in critical care settings, and underscores the importance of understanding various factors, including patient demographics and comorbidities, in determining patient outcomes (Kowsar, R., Rahimi, A. M., Sroka, M., Mansouri, A., Sadeghi, K., Bonakdar, E., Kateb, S. F., & Mahdavi, A. H., 2023).
+
+The ongoing COVID-19 pandemic has prompted extensive research into the impact of vaccination on the spread and severity of the virus. This literature review synthesizes findings from recent studies to understand better the correlation between daily new COVID-19 cases and vaccination:
+
+A global study emphasized the effectiveness of COVID-19 vaccination in reducing new cases and deaths. This research, analyzing global vaccine data, concluded that while vaccination significantly curtails the spread and fatality rates of COVID-19, the inequitable distribution of vaccines across countries poses a significant challenge (Global Vaccine Data Analysis, PubMed). This study's findings are crucial in understanding the global dynamics of vaccine impact on COVID-19 cases (Li Z, Liu X, Liu M, Wu Z, Liu Y, Li W, Liu M, Wang X, Gao B, Luo Y, Li X, Tao L, Wang W, Guo X., 2021).
+
+Focusing on the United States, a study in Nature explored the impact of vaccination across various states. It reported no significant correlation between pre-vaccination growth rates and vaccination rates, suggesting a consistent effectiveness of vaccines across different demographics and geographical areas. This research implies that the effectiveness of COVID-19 vaccines is relatively uniform, regardless of variations in states' demographic and political characteristics (Chen, X., Huang, H., Ju, J. et al., 2022).
+
+Another research investigated the correlation between COVID-19 vaccine coverage rates and hospitalization on a global scale. This study found a direct relationship between vaccine coverage and the number of hospital and ICU patients, indicating that higher vaccination rates correlate with lower hospitalization rates (Huang C, Yang L, Pan J, Xu X, Peng R., 2022).
+
+Mathematical modeling studies have also contributed significantly to this topic. Various studies assessed the effectiveness of vaccines, the impact on COVID-19 case numbers, and the role of vaccination in conjunction with non-pharmaceutical interventions. These models provide a predictive insight into the impact of vaccination strategies and their potential to control the pandemic (Moore, S., Hill, E.M., Dyson, L. et al., 2022).
+
+Lastly, an analysis by Johns Hopkins University revealed a significant negative correlation between vaccination coverage and the incidence and mortality rates of COVID-19 in U.S. counties. This study highlighted the disparities in vaccination uptake and the impact of COVID-19 across different county demographics, such as political affiliation, land use, and socioeconomic status (Ensheng Dong and Lauren Gardner, 2021).
+
+In conclusion, the reviewed literature consistently indicates that COVID-19 vaccination is effective in reducing new cases and deaths. While the impact varies globally due to differences in vaccine distribution and uptake, the overall trend underscores the critical role of vaccination in controlling the pandemic. The variations observed in different regions and among various demographics also point to the need for tailored vaccination strategies and equitable vaccine distribution to maximize public health benefits.
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+library(readxl)
+library(tidyverse)
+library(ggplot2)
+library(forecast)
+library(astsa) 
+library(xts)
+library(tseries)
+library(fpp2)
+library(fma)
+library(lubridate)
+library(tidyverse)
+library(TSstudio)
+library(quantmod)
+library(tidyquant)
+library(plotly)
+library(padr)
+library(gridExtra)
+library(reshape2)
+library(vars)
+library(knitr)
+```
+
+```{r load, include=FALSE, message=FALSE, warning=FALSE}
+owid_covid_data_us <- readxl::read_xlsx("../data/owid_covid_data_us.xlsx")
+```
+
+```{r prepare_for_plot,include=FALSE, message=FALSE, warning=FALSE}
+# Convert the 'date' column as date
+owid_covid_data_us$date <- as.Date(owid_covid_data_us$date)
+
+# Filter data for dates before 2022-10-20
+owid_covid_data_us <- owid_covid_data_us %>% filter(date < as.Date("2022-10-20"))
+```
+
+## VAR - Daily New Confirmed Deaths in the US, Hospital Patients, and ICU Patients
+
+### Exploratory Analysis
+
+```{r prepare_data,include=FALSE, message=FALSE, warning=FALSE}
+# Filter the data for dates from 2020-07-15 onwards
+filtered_data <- owid_covid_data_us %>% filter(date >= as.Date("2020-07-15"))
+
+# Convert to time series object
+new_deaths_ts <- ts(filtered_data$new_deaths, start = 2020, end = 2022, frequency=365)
+icu_ts <- ts(filtered_data$icu_patients, start = 2020, end = 2022, frequency=365)
+hosp_ts <- ts(filtered_data$hosp_patients, start = 2020, end = 2022, frequency=365)
+
+# Handle NAs with interpolation 
+new_deaths_ts <- na.interp(new_deaths_ts)
+
+# Create var data by combining three timeseries
+var_data = window(ts.union(new_deaths_ts, icu_ts, hosp_ts))
+```
+
+```{r plot1,message=FALSE, warning=FALSE}
+# Plot Timeseries of all 3 variables
+autoplot(var_data, facets = T) + labs(title = "Correlation Time Series Plots")+theme_bw()
+```
+
+```{r plot2,message=FALSE, warning=FALSE}
+# Plot Pairs
+pairs(cbind(New_Deaths=new_deaths_ts, ICU_Patients=icu_ts, Hospital_Patients=hosp_ts))
+```
+
+The "icu_ts" plot shows fluctuations similar to "new_deaths_ts" but with less pronounced peaks, suggesting that ICU admissions follow a similar trend as deaths but might not correlate perfectly. The "hosp_ts" plot likely shows the number of hospital patients over time, which, like the ICU data, exhibits waves of increases and decreases. The pattern might follow a similar trend to the ICU and death data, potentially with a lead time as hospital admissions typically precede ICU admissions and deaths.
+
+The scatterplot between "New_Deaths" and "ICU_Patients" might show a positive correlation, indicated by the clustering of points along an upward trajectory. This suggests that as ICU admissions increase, the number of deaths also increases, which is expected as more severe cases lead to higher mortality. The scatterplot between "ICU_Patients" and "Hospital_Patients" probably shows a strong positive correlation, as a high number of hospital admissions could lead to more patients requiring ICU care.
+
+### Fitting VAR(p)
+
+```{r fit1,message=FALSE, warning=FALSE}
+VARselect(var_data, lag.max = 10, type = "const")
+```
+
+::: panel-tabset
+
+#### Summary VAR(10)
+
+```{r fit1_result1,message=FALSE, warning=FALSE}
+summary(vars::VAR(var_data, p=10, type=c('const')))
+```
+
+#### Summary VAR(8)
+
+```{r fit1_result2,message=FALSE, warning=FALSE}
+summary(vars::VAR(var_data, p=8, type=c('const')))
+```
+
+:::
+
+The log likelihood is higher (closer to zero) for VAR(10) (-15619.034) compared to VAR(8) (-15719.638), suggesting that the VAR(10) model may fit the data better. In both models, many of the lagged values of new_deaths_ts, icu_ts, and hosp_ts are significant predictors of themselves and each other, which suggests that past values have a substantial influence on current values.
+
+The Multiple R-Squared values are high for both models, indicating a good fit. The Adjusted R-squared is slightly higher for VAR(10) than for VAR(8), which suggests that the additional lags in VAR(10) are providing useful information. The standard errors of the residuals are slightly lower for VAR(10), indicating a better fit to the data.
+
+### Cross Validation
+
+```{r cv1,message=FALSE, warning=FALSE}
+# Selecting relevant columns and handling NAs with interpolation
+time_series_data <- na.approx(filtered_data[, c("new_deaths", "icu_patients", "hosp_patients")])
+
+# Split data into training and testing sets (80-20 split)
+split_ratio <- 0.8
+split_index <- floor(nrow(time_series_data) * split_ratio)
+train_data <- head(time_series_data, split_index)
+test_data <- tail(time_series_data, nrow(time_series_data) - split_index)
+
+# Initialize vector to store RMSEs
+rmse_values <- numeric(10)
+
+# Loop through each lag order (1 to 10)
+for (i in 1:10) {
+  model <- VAR(train_data, p = i, type = "const")
+  forecasted <- predict(model, n.ahead = nrow(test_data))
+  forecasted_values <- sapply(forecasted$fcst, function(x) x[,1])  # Extracts forecasts
+  
+  # Calculate RMSE and store it
+  rmse_values[i] <- sqrt(mean((test_data - forecasted_values)^2))
+}
+
+# Plotting RMSEs
+plot(1:10, rmse_values, type = "b", xlab = "Lag Order", ylab = "RMSE", main = "RMSE vs Lag Order")
+```
+
+Because `VAR(4)` has the lowest RMSE, it indicates that it might generalize better when making predictions, despite not fitting the training data as closely as `VAR(10)`.
+My primary goal is forecasting, the model with the lower RMSE might be preferable, as it indicates better predictive performance. Besides, a model with too many lags might overfit the historical data, leading to poorer performance on new data. The lower RMSE of `VAR(4)` could suggest it is less prone to overfitting compared to `VAR(10)`. Therefore, I would pick `VAR(4)` to forecast.
+
+### Forecasting
+
+```{r forecast1, message=FALSE, warning=FALSE}
+fit1 <- VAR(var_data, p =4, type = "const")
+autoplot(forecast(fit1, h = 60))+theme_bw()
+```
+
+## ARIMAX - Daily New Confirmed Cases in the US, and People Vaccinated
+
+### Exploratory Analysis
+
+```{r prepare_data_2,include=FALSE, message=FALSE, warning=FALSE}
+# Filter the data for dates from 2020-07-15 onwards
+filtered_data <- owid_covid_data_us %>% filter(date >= as.Date("2020-12-13"))
+
+# Convert to time series object
+new_cases_ts <- ts(filtered_data$new_cases, start = 2021, end = 2022, frequency=365)
+vacc_ts <- ts(filtered_data$people_vaccinated, start = 2021, end = 2022, frequency=365)
+
+# Create var data by combining three timeseries
+var_data2 = window(ts.union(new_cases_ts, vacc_ts))
+```
+
+```{r plot3,message=FALSE, warning=FALSE}
+# Plot Timeseries of all 3 variables
+autoplot(var_data2, facets = T) + labs(title = "Correlation Time Series Plots")+theme_bw()
+```
+
+### Auto.Arima
+
+```{r arimax1}
+# Fit ARIMAX model
+arimax_model <- auto.arima(new_cases_ts, xreg = vacc_ts)
+
+summary(arimax_model)
+```
+
+The auto.arima function in *R* suggests an `ARIMAX(3,1,2)` model as the best fit for the data.
+
+### Fitting ARIMAX Model Manually
+
+```{r fit2}
+fit.reg <- lm(new_cases ~ people_vaccinated, data=filtered_data)
+summary(fit.reg)
+```
+
+::: panel-tabset
+
+#### ACF Plot of Residuals
+```{r acf1}
+ggAcf(residuals(fit.reg))
+```
+
+#### PACF Plot of Residuals
+```{r pacf1}
+ggPacf(residuals(fit.reg))
+```
+
+:::
+
+::: panel-tabset
+
+#### ACF Plot of first-differenced Residuals
+```{r acf2}
+ggAcf(residuals(fit.reg) %>% diff())
+```
+
+#### PACF Plot of first-differenced Residuals
+```{r pacf2}
+ggPacf(residuals(fit.reg) %>% diff())
+```
+
+:::
+
+Finding the model parameters.
+
+```{r fit3}
+d=1
+i=1
+temp= data.frame()
+ls=matrix(rep(NA,6*12),nrow=12) # roughly nrow = 3x4x1
+
+
+for (p in 1:4) # p=0,1,2,3
+{
+  for(q in 1:3) # q=0,1,2
+  {
+    for(d in 1) # d=1
+    {
+      
+      if(p-1+d+q-1<=8)
+      {
+        
+        model<- Arima(new_deaths_ts,order=c(p-1,d,q-1)) 
+        ls[i,]= c(p-1,d,q-1,model$aic,model$bic,model$aicc)
+        i=i+1
+        #print(i)
+        
+      }
+      
+    }
+  }
+}
+
+temp= as.data.frame(ls)
+names(temp)= c("p","d","q","AIC","BIC","AICc")
+
+#temp
+temp <- temp[order(temp$BIC, decreasing = FALSE),] 
+knitr::kable(temp)
+```
+
+```{r fit3_result, message=FALSE, warning=FALSE}
+# Extract lowest AIC
+temp[which.min(temp$AIC),] 
+
+# Extract lowest BIC
+temp[which.min(temp$BIC),]
+
+# Extract lowest AICc
+temp[which.min(temp$AICc),]
+```
+
+Both give us the same results: `ARIMA(3,1,2)` is the best model.
+
+```{r fit4}
+fit <- Arima(new_cases_ts,order=c(3,1,2),xreg=vacc_ts)
+summary(fit)
+```
+
+### Model Diagnostics
+
+```{r fit4_output}
+checkresiduals(fit)
+```
+
+### Forecasting
+
+```{r forecast3}
+fcast_cases = forecast(fit, xreg = vacc_ts, h = 30)
+autoplot(fcast_cases) + xlab("Date")+ylab("New Cases")+ggtitle("Predictions")
+```
+
+
+
